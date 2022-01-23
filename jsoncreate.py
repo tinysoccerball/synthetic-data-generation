@@ -41,12 +41,6 @@ import csv #need to implement this cool stuff soon
 #export file to working directory
 #maybe loop back and keep going
 
-
-#with open('C:/Users/jpbg2/OneDrive/Documents/NoseProject/female_head_210919-Mazhar-Oguz.JSON', encoding = 'utf-8') as f: #open JSON file as an object
-    #face_data = json.load(f) #set variable to that object
-
-
-
 def bringOBJ():#import .obj file into scene
     file_loc = input("Please inpute file path to .obj file. Please use backslash / in file path: ")
     #file_loc = 'C:/Users/jpbg2/OneDrive/Documents/NoseProject/Sample3D/Sample3D/female_head_1.obj'
@@ -57,17 +51,11 @@ def bringOBJ():#import .obj file into scene
     bpy.context.view_layer.objects.active = obj_object #selects object
     print('Imported name: ', obj_object.name)
 
-
-
 def pointsOfInterest():#Funcion to select all vertex groups
     for i in range(len(face_data["features"])):
         bpy.context.object.vertex_groups.active_index = i
         bpy.ops.object.vertex_group_select()
        
-
-
-
-
 def getJSON(tol):
     obj = bpy.context.active_object #sets a variable that allows for more readable code
     obj_object = bpy.context.selected_objects[0]
@@ -221,7 +209,6 @@ def main():
     export()
     deleteOBJ()
     
-
 if __name__ == "__main__":
     #set variables for cleaner code
     

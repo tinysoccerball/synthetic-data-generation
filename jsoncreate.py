@@ -160,11 +160,11 @@ def newerJSON():
         bpy.context.area.type = 'TEXT_EDITOR'
         modelname = face_data["threeDModel"]
         index = index + 1
-    blend_file_path = bpy.data.filepath #create variable holding path to file
-    directory = os.path.dirname(blend_file_path) #creates another variable holding path to folder file is (removes file from end of path)
+    #blend_file_path = bpy.data.filepath #create variable holding path to file
+    #directory = os.path.dirname(blend_file_path) #creates another variable holding path to folder file is (removes file from end of path)
     print("building  directory map")
     print(directory)
-    print(blend_file_path)
+    #print(blend_file_path)
     target_file = os.path.join(directory, input("Enter name you want JSON to be exported as: ")) #appends inputted name  to filepath to specify exported file name and location
     print(target_file)
     full_target_file = target_file + ".JSON" #adds file extension so the computer doesn't get mad
@@ -175,9 +175,10 @@ def newerJSON():
 
 def export():#export the file as .obj
     bpy.ops.object.mode_set(mode = 'OBJECT') #mode to object
-    blend_file_path = bpy.data.filepath #create variable holding path to file
-    directory = os.path.dirname(blend_file_path) #creates another variable holding path to folder file is (removes file from end of path)
+    #blend_file_path = bpy.data.filepath #create variable holding path to file
+    #directory = os.path.dirname(blend_file_path) #creates another variable holding path to folder file is (removes file from end of path)
     target_file = os.path.join(directory, input("Enter name you want object to be exported as: ")) #appends inputted name  to filepath to specify exported file name and location
+    print(target_file)
     full_target_file = target_file + ".obj" #adds file extension so the computer doesn't get mad
     bpy.ops.export_scene.obj(filepath=full_target_file) #actually export the file
 
@@ -214,6 +215,9 @@ if __name__ == "__main__":
     
     inp = ""
     inp = input("Enter filepath to JSON file. Please use / backslash in file path: ")
+    print("Files will be stored in this directory")
+    directory = os.path.dirname(inp)
+    print(directory)
     #assert os.path.exists(inp), "I did not find the file at, "+str(inp)
     with open(inp, encoding = 'utf-8') as f: #open JSON file as an object
         face_data = json.load(f) #set variable to that object

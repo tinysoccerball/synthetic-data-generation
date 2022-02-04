@@ -153,9 +153,9 @@ def newerJSON():
         bpy.ops.object.vertex_group_select()  #select group
         bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error
         bpy.ops.view3d.snap_cursor_to_selected() #snaps #D cursor to location of selected vertex
-        feature["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
-        feature["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
-        feature["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
+        feature["xVal"] = -(round(bpy.context.scene.cursor.location[0], 2))
+        feature["yVal"] = round(bpy.context.scene.cursor.location[2], 2)
+        feature["zVal"] = -(round(bpy.context.scene.cursor.location[1], 2))
         bpy.ops.object.vertex_group_deselect()
         bpy.context.area.type = 'TEXT_EDITOR'
         modelname = face_data["threeDModel"]

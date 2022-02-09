@@ -117,12 +117,13 @@ def transformMesh():
     dy = input("Please input dy value: ")
     dz = input("Please input dz value: ")
     prop_size = input("Please input proportional transform size: ")
+    falloff = input("Please input falloff type. Your options are 'SMOOTH', 'SPHERE', and 'INVERSE SPHERE': ")
     #Takes 4 arguments. delta values as floats and prop size as float
 #this is the transformation
     bpy.ops.object.mode_set(mode = 'EDIT') #mesh must be in Edit mode for us to edit the mesh
     bpy.ops.object.vertex_group_set_active(group=vgroup) 
     bpy.ops.object.vertex_group_select()
-    bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff='SMOOTH', proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
+    bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
 
 def cursorReturn():
     #This bring the cursor back to the origin. Serves no necessary pracical purpose.

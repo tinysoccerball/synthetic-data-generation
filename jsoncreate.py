@@ -117,7 +117,7 @@ def transformMesh():
     dy = input("Please input dy value: ")
     dz = input("Please input dz value: ")
     prop_size = input("Please input proportional transform size: ")
-    falloff = input("Please input falloff type. Your options are 'SMOOTH', 'SPHERE', and 'INVERSE SPHERE': ")
+    falloff = input("Please input falloff type. Your options are 'SMOOTH', 'SPHERE', and 'INVERSE SQUARE': ")
     #Takes 4 arguments. delta values as floats and prop size as float
 #this is the transformation
     bpy.ops.object.mode_set(mode = 'EDIT') #mesh must be in Edit mode for us to edit the mesh
@@ -136,7 +136,7 @@ def newJSON():
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error
-        bpy.ops.view3d.snap_cursor_to_selected() #snaps #D cursor to location of selected vertex
+        bpy.ops.view3d.snap_cursor_to_selected() #snaps 3D cursor to location of selected vertex
         face_data["features"]["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
         face_data["features"]["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
         face_data["features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            

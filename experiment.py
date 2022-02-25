@@ -119,7 +119,7 @@ print(flines)
 vlines[1][1] -= 2
 
 def makefile():
-    with open ("C:/Users/jpbg2/OneDrive/Documents/NoseProject/newfile.obj", 'w') as outfile:
+    with open ("C:/Users/jpbg2/OneDrive/Documents/NoseProject/demo4file.obj", 'w') as outfile:
         for line in commentlines:
             outfile.write('# ' + line)
         outfile.write("mtllib " + mlines)

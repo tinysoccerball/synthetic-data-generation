@@ -153,9 +153,9 @@ def newerJSON():
         #feature["xVal"] = -(round(bpy.context.scene.cursor.location[0], 2))
         feature["xVal"] = -(round(tup[0], 2))
         #feature["yVal"] = round(bpy.context.scene.cursor.location[2], 2)
-        feature["yVal"] = (round(tup[2], 2))
+        feature["yVal"] = (round(tup[1], 2))
         #feature["zVal"] = -(round(bpy.context.scene.cursor.location[1], 2))
-        feature["zVal"] = -(round(tup[1], 2))
+        feature["zVal"] = (round(tup[2], 2))
         bpy.ops.object.vertex_group_deselect()
         #bpy.context.area.type = 'TEXT_EDITOR'
         modelname = face_data["threeDModel"]

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Download</title>
+</head>
+<body>
+    <h1>JSON data creation</h1>
+    <script src="instructionCreation.js"></script>
+    <input type="text" id="abbrv" name="abbrv" placeholder = "abbreviation">
+    <input type="text" id="modelname" name="modelname" placeholder = "Model Name">
+    <input type="number" id="dx" name="dx" placeholder = "# of Changes X">
+    <input type="number" id="dy" name="dy" placeholder = "# of Changes Y">
+    <input type="number" id="dz" name="dz" placeholder = "# of Changes Z">
+    <input type="number" id="influence" name="influence" placeholder = "influence"> 
+    <input type="text" id="xmagnitude" name="xmagnitude" placeholder = "X Magnitude">
+    <input type="text" id="ymagnitude" name="ymagnitude" placeholder = "Y Magnitude">
+    <input type="text" id="zmagnitude" name="zmagnitude" placeholder = "Z Magnitude">
+    <button onclick="everything()">To console</button>
+    <p id="hiddenMessage" style="display:none">kill me</p>
+    <p id="Output"></p>
+    <button onclick="beginDownload()">Make and Download JSON</button>
+</body>
+</html>

@@ -235,9 +235,11 @@ function beginDownload(){
     var inputDY = document.getElementById("dy").value;
     var inputDZ = document.getElementById("dz").value;
     var inputInfluence = document.getElementById("influence").value;
-    var inputMagnitude = document.getElementById("magnitude").value;
+    var xInputMagnitude = document.getElementById("xmagnitude").value;
+    var yInputMagnitude = document.getElementById("ymagnitude").value;
+    var zInputMagnitude = document.getElementById("zmagnitude").value;
     var inputAbbrv = document.getElementById("abbrv").value;
     var modelName = document.getElementById("modelname").value;
-    var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+inputMagnitude+".json";
+    var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+xInputMagnitude+"_"+yInputMagnitude+"_"+zInputMagnitude+".json";
     download(filename, everything());
 }

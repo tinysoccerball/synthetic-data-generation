@@ -1,3 +1,5 @@
+inputs = [];
+
 function everything() {
     let counter = 1;
     var dx = 0;
@@ -16,7 +18,7 @@ function everything() {
     var modelName = document.getElementById("modelname").value;
 
     function makemods(point, dx, dy, dz, infl) { 
-    mod = {
+        mod = {
         "feature_abbrv": point,
         "deltaX": dx,
         "deltaY": dy,
@@ -24,8 +26,112 @@ function everything() {
         "InfluenceRadius": infl
                 }
     //console.log(mod);
-    return mod;
+        return mod;
     }
+
+    function combineArrays( array_of_arrays ){
+
+        // First, handle some degenerate cases...
+    
+        if( ! array_of_arrays ){
+            // Or maybe we should toss an exception...?
+            return [];
+        }
+    
+        if( ! Array.isArray( array_of_arrays ) ){
+            // Or maybe we should toss an exception...?
+            return [];
+        }
+    
+        if( array_of_arrays.length == 0 ){
+            return [];
+        }
+    
+        for( let i = 0 ; i < array_of_arrays.length; i++ ){
+            if( ! Array.isArray(array_of_arrays[i]) || array_of_arrays[i].length == 0 ){
+                // If any of the arrays in array_of_arrays are not arrays or zero-length, return an empty array...
+                return [];
+            }
+        }
+    
+        // Done with degenerate cases...
+    
+        // Start "odometer" with a 0 for each array in array_of_arrays.
+        let odometer = new Array( array_of_arrays.length );
+        odometer.fill( 0 ); 
+    
+        let output = [];
+    
+        let newCombination = formCombination( odometer, array_of_arrays );
+    
+        output.push( newCombination );
+    
+        while ( odometer_increment( odometer, array_of_arrays ) ){
+            newCombination = formCombination( odometer, array_of_arrays );
+            output.push( newCombination );
+        }
+    
+        return output;
+    }/* combineArrays() */
+
+    function makeModCombinations() {
+        mods = [];
+        for (i = 0; i > inputs.length; i++) {
+            mods.push(makemods(inputs[i][7], inputs[i][0], inputs[i][1], inputs[i][2], inputs[i][3]))
+        }
+        return mods;
+    }
+
+// Translate "odometer" to combinations from array_of_arrays
+function formCombination( odometer, array_of_arrays ){
+    // In Imperative Programmingese (i.e., English):
+    // let s_output = "";
+    // for( let i=0; i < odometer.length; i++ ){
+    //    s_output += "" + array_of_arrays[i][odometer[i]]; 
+    // }
+    // return s_output;
+
+    // In Functional Programmingese (Henny Youngman one-liner):
+    return odometer.reduce(
+      function(accumulator, odometer_value, odometer_index){
+        return "" + accumulator + array_of_arrays[odometer_index][odometer_value];
+      },
+      ""
+    );
+}/* formCombination() */
+
+function odometer_increment( odometer, array_of_arrays ){
+
+    // Basically, work you way from the rightmost digit of the "odometer"...
+    // if you're able to increment without cycling that digit back to zero,
+    // you're all done, otherwise, cycle that digit to zero and go one digit to the
+    // left, and begin again until you're able to increment a digit
+    // without cycling it...simple, huh...?
+
+    for( let i_odometer_digit = odometer.length-1; i_odometer_digit >=0; i_odometer_digit-- ){ 
+
+        let maxee = array_of_arrays[i_odometer_digit].length - 1;         
+
+        if( odometer[i_odometer_digit] + 1 <= maxee ){
+            // increment, and you're done...
+            odometer[i_odometer_digit]++;
+            return true;
+        }
+        else{
+            if( i_odometer_digit - 1 < 0 ){
+                // No more digits left to increment, end of the line...
+                return false;
+            }
+            else{
+                // Can't increment this digit, cycle it to zero and continue
+                // the loop to go over to the next digit...
+                odometer[i_odometer_digit]=0;
+                continue;
+            }
+        }
+    }/* for( let odometer_digit = odometer.length-1; odometer_digit >=0; odometer_digit-- ) */
+
+}/* odometer_increment() */
 
     function uniq(a) {
         return a.sort().filter(function(item, pos, ary) {
@@ -59,39 +165,65 @@ function everything() {
         return arr;
     }
 
-    function modlist() {
-    mods = [];
-    fileparts = [];
-    counter = 1;
-    changelist = removeDuplicates(changelist);
-    for(i = 0; i < (changelist.length); i++){
-        file = {
-            "threeDModel": modelName,
-            "OriginalOBJFile": modelName + ".obj",
-            "OriginalJSONFile": modelName + ".json",
-            "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
-            "TargetJSONFile": modelName + "-Target-" + counter +".json",
-            "Folder": ".",
-            "FallOffType": "",
-            "modifications": makemods(inputAbbrv, changelist[i][0], changelist[i][1], changelist[i][2], inputInfluence)
+    function objectProduct(obj) {
+        var keys = Object.keys(obj),
+            values = keys.map(function(x) { return obj[x] });
+    
+        return product(values).map(function(p) {
+            var e = {};
+            keys.forEach(function(k, n) { e[k] = p[n] });
+            return e;
+        });
+    }
+
+
+
+    function manymods() {
+        holding = [];
+        secondary = [];
+        for(i = 0; i < (changelistlist.length); i++){
+            //console.log(i);
+            for (j = 0; j < changelistlist[i].length; j++){
+                thismod = [];
+                thismod.push(makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence));
+                holding.push(thismod);
+            }
+            secondary.push(holding);
+            holding = [];
         }
-        fileparts.push(file);
-        counter++;
-        //mods.push(makemods(inputAbbrv, changelist[i][0], changelist[i][1], changelist[i][2], inputInfluence));
+        //mixedup = combineArrays(holding);
+        console.log(JSON.stringify(secondary, null, 4));
+        //console.log(JSON.stringify(combineArrays(holding), null, 4));
+        return combineArrays(secondary);
     }
-    /*
-    file = {
-        "threeDModel": modelName,
-        "OriginalOBJFile": modelName + ".obj",
-        "OriginalJSONFile": modelName + ".json",
-        "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
-        "TargetJSONFile": modelName + "-Target-" + counter +".json",
-        "Folder": ".",
-        "FallOffType": "",
-        "modifications": modlist()
-    }
-    */
-    return fileparts;
+
+    function modlist() {
+        fileparts = [];
+        thismod = [];
+        counter = 1;
+        changelist = removeDuplicates(changelist);
+        for (i = 0; i < changelistlist.length; i++){
+            changelistlist[i] = removeDuplicates(changelistlist[i]);
+        }
+        console.log(changelistlist);
+        for(i = 0; i < (changelistlist.length); i++){
+            //for (j = 0; j < changelistlist[i].length; j++){
+            file = {
+                "threeDModel": modelName,
+                "OriginalOBJFile": modelName + ".obj",
+                "OriginalJSONFile": modelName + ".json",
+                "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
+                "TargetJSONFile": modelName + "-Target-" + counter +".json",
+                "Folder": ".",
+                "FallOffType": "",
+                "modifications": manymods()
+                //"modifications":makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence)
+            }
+                counter++;
+                //mods.push(makemods(inputAbbrv, changelist[i][0], changelist[i][1], changelist[i][2], inputInfluence));
+            }
+            fileparts.push(file);
+        return fileparts;
     }
     
 
@@ -181,33 +313,39 @@ function everything() {
         };
         var jsonReadyText = JSON.stringify(jsonText, null, 4);*/
         ////////////////////////////////////////////////
-    
-        
-        for (xmag = 0; xmag < changes; xmag++){
-            for (ymag = 0; ymag < changes; ymag++){
-                for (zmag = 0; zmag < changes; zmag++){
-                    changelist.push([dx, dy, dz]);
-                    if (dz < (inputDZ * zInputMagnitude)){
-                        dz += parseInt(zInputMagnitude);
+        changelistlist = [];
+        for (i = 0; i < inputs.length; i++){
+            for (xmag = 0; xmag < changes; xmag++){
+                for (ymag = 0; ymag < changes; ymag++){
+                    for (zmag = 0; zmag < changes; zmag++){
+                        changelist.push([dx, dy, dz]);
+                        if (dz < (inputDZ * zInputMagnitude)){
+                            dz += parseInt(zInputMagnitude);
+                        }
+                        changelist.push([dx, dy, dz]);
                     }
-                    changelist.push([dx, dy, dz]);
+                    if (dy < inputDY * yInputMagnitude){
+                        dy += parseInt(yInputMagnitude);
+                    }
+                    dz = 0;
                 }
-                if (dy < inputDY * yInputMagnitude){
-                    dy += parseInt(yInputMagnitude);
+                if (dx < (inputDX * xInputMagnitude)){
+                    dx += parseInt(xInputMagnitude);
                 }
+                dy = 0;
                 dz = 0;
-            }
-        if (dx < (inputDX * xInputMagnitude)){
-            dx += parseInt(xInputMagnitude);
+                }
+            changelistlist.push(changelist)
+            //console.log(changelistlist);
+            changelist = [];
         }
-        dy = 0;
-        dz = 0;
-        }
+        
 
         var thejson = JSON.stringify(finalmodfiles(), null, 4);
         return thejson;
     }
-    console.log(getUserInput());
+    //console.log(getUserInput());
+    //console.log(modlist());
     return getUserInput(); 
 }
 
@@ -224,9 +362,12 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
-function closer() {
-    iterations = [];
-    filesheet = everything();
+function addMod() {
+    thisInput = [document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value, document.getElementById("influence").value, document.getElementById("xmagnitude").value, document.getElementById("ymagnitude").value, document.getElementById("zmagnitude").value, document.getElementById("abbrv").value, document.getElementById("modelname").value];
+    //console.log(thisInput);
+    inputs.push(thisInput);
+    alert("Modification Added!");
+    //console.log(inputs);
 }
 
 // Start file download.

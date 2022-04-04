@@ -177,42 +177,66 @@ function everything() {
         });
     }
 
+    const cartesianProduct = (arr1, arr2) => {
+        const res = [];
+        for(let i = 0; i < arr1.length; i++){
+           for(let j = 0; j < arr2.length; j++){
+              res.push(
+                 [arr1[i]].concat(arr2[j])
+              );
+           };
+        };
+        return res;
+     };
+     
 
-
-    function manymods() {
+    function manymods(i) {
         holding = [];
+        smalllist = [];
         secondary = [];
         thismod = [];
         for(i = 0; i < (changelistlist.length); i++){
-            //console.log(i);
             for (j = 0; j < changelistlist[i].length; j++){
+                holding.push(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence);
                 thismod.push(makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence));
-                //holding.push(thismod);
+                smalllist.push(holding);
+                holding = [];
             }
             secondary.push(thismod);
             thismod = [];
         }
-        //mixedup = combineArrays(holding);
-        //console.log(JSON.stringify(secondary, null, 4));
-        console.log(JSON.stringify(combineArrays(secondary), null, 4));
-        result = JSON.stringify(secondary, null, 4);
-        return result;
-        //return combineArrays(secondary);
+        let biglist = cartesianProduct(secondary[0], secondary[1]);
+        return biglist[i];
     }
 
     function modlist() {
+        holding = [];
+        smalllist = [];
+        secondary = [];
+        thismod = [];
+        for(i = 0; i < (changelistlist.length); i++){
+            for (j = 0; j < changelistlist[i].length; j++){
+                holding.push(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence);
+                thismod.push(makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence));
+                smalllist.push(holding);
+                holding = [];
+            }
+            secondary.push(thismod);
+            thismod = [];
+        }
+        let biglist = cartesianProduct(secondary[0], secondary[1]);
         fileparts = [];
         thismod = [];
-        counter = 1;
+        counter = 0;
         changelist = removeDuplicates(changelist);
         for (i = 0; i < changelistlist.length - 1; i++){
             //changelistlist[i] = removeDuplicates(changelistlist[i]);
             changelistlist[i+1] = removeDuplicates(changelistlist[i+1]);
         }
-        console.log(changelistlist);
+        //console.log(changelistlist);
         //biglist = combineArrays(changelistlist);
         //console.log(biglist);
-        for(i = 0; i < (changelistlist.length); i++){
+        for(i = 0; i < (biglist.length); i++){
             //for (j = 0; j < changelistlist[i].length; j++){
             file = {
                 "threeDModel": modelName,
@@ -222,13 +246,13 @@ function everything() {
                 "TargetJSONFile": modelName + "-Target-" + counter +".json",
                 "Folder": ".",
                 "FallOffType": "",
-                "modifications": manymods()
+                "modifications": biglist[i]//manymods(i)
                 //"modifications":makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence)
             }
                 counter++;
                 //mods.push(makemods(inputAbbrv, changelist[i][0], changelist[i][1], changelist[i][2], inputInfluence));
-            }
-            fileparts.push(file);
+                fileparts.push(file);
+        }
         return fileparts;
     }
     
@@ -351,7 +375,7 @@ function everything() {
         var thejson = JSON.stringify(finalmodfiles(), null, 4);
         return thejson;
     }
-    //console.log(getUserInput());
+    console.log(getUserInput());
     //console.log(modlist());
     return getUserInput(); 
 }

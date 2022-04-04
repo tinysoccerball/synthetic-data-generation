@@ -1,4 +1,5 @@
 inputs = [];
+let modcount = 0;
 
 function everything() {
     let counter = 1;
@@ -399,6 +400,8 @@ function addMod() {
     inputs.push(thisInput);
     alert("Modification Added!");
     //console.log(inputs);
+    modcount++;
+    document.getElementById("counter").innerHTML = "Added modifications: " + modcount;
 }
 
 // Start file download.

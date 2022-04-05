@@ -1,6 +1,20 @@
 inputs = [];
 let modcount = 0;
 
+const cartesian =
+        (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+
+function cartesianCalc(arr){
+    let output = [];
+    for(i = 0; i < (arr.length - 1); i++) {
+        console.log("hello Juan");
+        console.log(cartesian(arr[i], arr[i+1]));
+        console.log("Hello World");
+        output.push(cartesian(arr[i], arr[i+1]));
+    }
+    return output;
+}
+
 function everything() {
     let counter = 1;
     var dx = 0;
@@ -75,13 +89,6 @@ function everything() {
         return output;
     }/* combineArrays() */
 
-    function makeModCombinations() {
-        mods = [];
-        for (i = 0; i > inputs.length; i++) {
-            mods.push(makemods(inputs[i][7], inputs[i][0], inputs[i][1], inputs[i][2], inputs[i][3]))
-        }
-        return mods;
-    }
 
     // Translate "odometer" to combinations from array_of_arrays
     function formCombination( odometer, array_of_arrays ){
@@ -206,7 +213,8 @@ function everything() {
             secondary.push(thismod);
             thismod = [];
         }
-        let biglist = cartesianProduct(secondary[0], secondary[1]);
+        //let biglist = cartesianCalc(secondary);// cartesianProduct(secondary[0], secondary[1]);
+        //console.log(biglist);
         return biglist[i];
     }
 
@@ -234,11 +242,7 @@ function everything() {
             //changelistlist[i] = removeDuplicates(changelistlist[i]);
             changelistlist[i+1] = removeDuplicates(changelistlist[i+1]);
         }
-        //console.log(changelistlist);
-        //biglist = combineArrays(changelistlist);
-        //console.log(biglist);
         for(i = 0; i < (biglist.length); i++){
-            //for (j = 0; j < changelistlist[i].length; j++){
             file = {
                 "threeDModel": modelName,
                 "OriginalOBJFile": modelName + ".obj",
@@ -248,10 +252,8 @@ function everything() {
                 "Folder": ".",
                 "FallOffType": "",
                 "modifications": biglist[i]//manymods(i)
-                //"modifications":makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence)
             }
                 counter++;
-                //mods.push(makemods(inputAbbrv, changelist[i][0], changelist[i][1], changelist[i][2], inputInfluence));
                 fileparts.push(file);
         }
         return fileparts;
@@ -366,7 +368,7 @@ function everything() {
                 dy = 0;
                 dz = 0;
                 }
-            changelistlist.push(changelist)
+            changelistlist.push(changelist);
             //console.log(changelistlist);
             changelist = [];
             dx = 0;
@@ -398,7 +400,7 @@ function addMod() {
     thisInput = [document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value, document.getElementById("influence").value, document.getElementById("xmagnitude").value, document.getElementById("ymagnitude").value, document.getElementById("zmagnitude").value, document.getElementById("abbrv").value, document.getElementById("modelname").value];
     //console.log(thisInput);
     inputs.push(thisInput);
-    alert("Modification Added!");
+    //alert("Modification Added!");
     //console.log(inputs);
     modcount++;
     var container = document.getElementById('container');

@@ -34,7 +34,7 @@ function everything() {
 
     function makemods(point, dx, dy, dz, infl) { 
         mod = {
-        "feature_abbrv": point,
+        "feature-abbrv": point,
         "deltaX": dx,
         "deltaY": dy,
         "deltaZ": dz,

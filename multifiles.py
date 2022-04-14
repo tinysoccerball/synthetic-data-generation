@@ -192,14 +192,9 @@ def deleteOBJ():#prevent context errors that arise from object not being deleted
 def main():
     bringOBJ() 
     getJSON()
-    print("_______________________________") #makes it easier to read console
-    print("Selected Points:")
     newerPoints()
-    print("_______________________________") #easy to read
     transformMesh()
-    print("After Transform:")
     newerPoints()
-    print("+++++++++++++++++++++++++++++++") #shows end of run
     newerJSON()
     cursorReturn()
     export()

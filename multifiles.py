@@ -18,7 +18,7 @@ def bringOBJ():#import .obj file into scene
     print('Imported name: ', obj_object.name)
 
 def pointsOfInterest():#Funcion to select all vertex groups
-    for i in range(len(face_data["features"])):
+    for i in range(len(face_data["Features"])):
         bpy.context.object.vertex_groups.active_index = i
         bpy.ops.object.vertex_group_select()
        
@@ -41,7 +41,7 @@ def getJSON():
     #blanace the tree
     kd.balance()
     #print("Read Values:") 
-    for feature in face_data["features"]: #loop through every object in "features" in Json file
+    for feature in face_data["Features"]: #loop through every object in "Features" in Json file
         new_vertex_group = bpy.context.active_object.vertex_groups.new(name=feature["abbrv"])
         #make vertex groups with proper names
         abbrv = feature["abbrv"]
@@ -65,7 +65,7 @@ def getJSON():
         
 def newPoints(): #Uses 3d cursor to find new coordinates of points
     bpy.ops.object.mode_set(mode = 'EDIT')
-    for index in range(len(face_data["features"])): #loop through all groups
+    for index in range(len(face_data["Features"])): #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         #bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error
@@ -79,7 +79,7 @@ def newerPoints():
     bm = bmesh.new()
     ob = bpy.context.active_object
     bm = bmesh.from_edit_mesh(ob.data)
-    for index in range(len(face_data["features"])): #loop through all groups
+    for index in range(len(face_data["Features"])): #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         #bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error
@@ -101,6 +101,7 @@ def scale(vgroup, dx, dy, dz, prop_size):
     bpy.ops.object.vertex_group_select()
     bpy.ops.transform.resize(value=(dx, dy, dz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=prop_size, use_proportional_connected=True, use_proportional_projected=False)
     bpy.ops.object.vertex_group_deselect()
+    print("scaled")
 
 def translate(vgroup, dx, dy, dz, prop_size):
     falloff = input_data["FallOffType"]
@@ -117,6 +118,7 @@ def translate(vgroup, dx, dy, dz, prop_size):
         bpy.ops.object.vertex_group_select()
         bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
         bpy.ops.object.vertex_group_deselect()
+        print("translated")
 
 def transformMesh():
     for modification in input_data["Modifications"]:
@@ -126,6 +128,7 @@ def transformMesh():
         prop_size = modification["InfluenceRadius"]
         bpy.ops.object.mode_set(mode = 'EDIT')
         vgroup = modification["Feature-abbrv"]
+        print(dx, dy, dz, prop_size, vgroup)
         bpy.ops.object.vertex_group_set_active(group=vgroup) 
         bpy.ops.object.vertex_group_select()
         if modification["TransformationType"] == "Scale":
@@ -143,14 +146,14 @@ def cursorReturn():
 
 def newJSON():
     bpy.ops.object.mode_set(mode = 'EDIT')
-    for index in range(len(face_data["features"])): #loop through all groups
+    for index in range(len(face_data["Features"])): #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         #bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error
         bpy.ops.view3d.snap_cursor_to_selected() #snaps 3D cursor to location of selected vertex
-        face_data["features"]["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
-        face_data["features"]["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
-        face_data["features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
+        face_data["Features"]["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
+        face_data["Features"]["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
+        face_data["Features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
         bpy.ops.object.vertex_group_deselect()
         #bpy.context.area.type = 'TEXT_EDITOR'
         modelname = face_data["ThreeDModel"]
@@ -163,7 +166,7 @@ def newerJSON():
     bm = bmesh.from_edit_mesh(ob.data)
     bpy.ops.object.mode_set(mode = 'EDIT')
     index = 0
-    for feature in face_data["features"]: #loop through all groups
+    for feature in face_data["Features"]: #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         #bpy.context.area.type = 'VIEW_3D' #must be in VIEW_3D or will throw a context error

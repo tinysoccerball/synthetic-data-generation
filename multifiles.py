@@ -40,7 +40,7 @@ def getJSON():
         kd.insert(v.co, i)
     #blanace the tree
     kd.balance()
-    print("Read Values:") 
+    #print("Read Values:") 
     for feature in face_data["features"]: #loop through every object in "features" in Json file
         new_vertex_group = bpy.context.active_object.vertex_groups.new(name=feature["abbrv"])
         #make vertex groups with proper names
@@ -51,7 +51,7 @@ def getJSON():
         x = float(negx)
         y = float(negy)
         z = float(negz)
-        print(abbrv, -x, -z, y)
+        #print(abbrv, -x, -z, y)
         bpy.context.scene.cursor.location = (-x, -z, y) 
         #order and magnitudes are due to blender's unconventional coordinate system 
         co_find = obj.matrix_world.inverted() @ bpy.context.scene.cursor.location
@@ -92,28 +92,49 @@ def newerPoints():
         #bpy.context.area.type = 'TEXT_EDITOR'
 
 
-def transformMesh():
+def scale(vgroup, dx, dy, dz, prop_size):
     falloff = input_data["FallOffType"]
     if falloff == "":
         falloff = "SMOOTH"
-    for modification in input_data["modifications"]:
-        #vgroup = input("Please input name of landmark: ")
-        vgroup = modification["feature-abbrv"]
-        #dx = input("Please input dx value: ")
-        dx = modification["deltaX"]
-        #dy = input("Please input dy value: ")
-        dy = modification["deltaY"]
-        #dz = input("Please input dz value: ")
-        dz = modification["deltaZ"]
-        #prop_size = input("Please input proportional transform size: ")
-        prop_size = modification["InfluenceRadius"]
-        #falloff = input("Please input falloff type. Your options are 'SMOOTH', 'SPHERE', and 'INVERSE SQUARE': ")
-        #Takes 5 arguments. delta values as floats and prop size as float and fallof as string
-        #this is the transformation
-        bpy.ops.object.mode_set(mode = 'EDIT') #mesh must be in Edit mode for us to edit the mesh
+    bpy.ops.object.mode_set(mode = 'EDIT')
+    bpy.ops.object.vertex_group_set_active(group=vgroup) 
+    bpy.ops.object.vertex_group_select()
+    bpy.ops.transform.resize(value=(dx, dy, dz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=prop_size, use_proportional_connected=True, use_proportional_projected=False)
+    bpy.ops.object.vertex_group_deselect()
+
+def translate(vgroup, dx, dy, dz, prop_size):
+    falloff = input_data["FallOffType"]
+    if falloff == "":
+        falloff = "SMOOTH"
+    #for modification in input_data["Modifications"]:
+        #vgroup = modification["feature-abbrv"]
+        #dx = modification["Delta-Magnitude-X"]
+        #dy = modification["Delta-Magnitude-Y"]
+        #dz = modification["Delta-Magnitude-Z"]
+        #prop_size = modification["InfluenceRadius"]
+        bpy.ops.object.mode_set(mode = 'EDIT')
         bpy.ops.object.vertex_group_set_active(group=vgroup) 
         bpy.ops.object.vertex_group_select()
         bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
+        bpy.ops.object.vertex_group_deselect()
+
+def transformMesh():
+    for modification in input_data["Modifications"]:
+        dx = modification["Delta-Magnitude-X"]
+        dy = modification["Delta-Magnitude-Y"]
+        dz = modification["Delta-Magnitude-Z"]
+        prop_size = modification["InfluenceRadius"]
+        bpy.ops.object.mode_set(mode = 'EDIT')
+        vgroup = modification["Feature-abbrv"]
+        bpy.ops.object.vertex_group_set_active(group=vgroup) 
+        bpy.ops.object.vertex_group_select()
+        if modification["TransformationType"] == "Scale":
+            scale(vgroup, float(dx), float(dy), float(dz), float(prop_size))
+        elif modification["TransformationType"] == "Translate":
+            translate(vgroup, float(dx), float(dy), float(dz), float(prop_size))
+        else:
+            pass
+
 
 def cursorReturn():
     #This bring the cursor back to the origin. Serves no necessary pracical purpose.
@@ -132,7 +153,7 @@ def newJSON():
         face_data["features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
         bpy.ops.object.vertex_group_deselect()
         #bpy.context.area.type = 'TEXT_EDITOR'
-        modelname = face_data["threeDModel"]
+        modelname = face_data["ThreeDModel"]
         with open(modelname + '.json', 'w') as outfile:
             outfile.write(face_data)
 
@@ -158,7 +179,7 @@ def newerJSON():
         feature["zVal"] = (round(tup[2], 2))
         bpy.ops.object.vertex_group_deselect()
         #bpy.context.area.type = 'TEXT_EDITOR'
-        modelname = face_data["threeDModel"]
+        modelname = face_data["ThreeDModel"]
         index = index + 1
     #blend_file_path = bpy.data.filepath #create variable holding path to file
     #directory = os.path.dirname(blend_file_path) #creates another variable holding path to folder file is (removes file from end of path)
@@ -192,16 +213,9 @@ def deleteOBJ():#prevent context errors that arise from object not being deleted
 def main():
     bringOBJ() 
     getJSON()
-    print("_______________________________") #makes it easier to read console
-    print("Selected Points:")
-    newerPoints()
-    print("_______________________________") #easy to read
     transformMesh()
-    print("After Transform:")
-    newerPoints()
-    print("+++++++++++++++++++++++++++++++") #shows end of run
-    newerJSON()
     cursorReturn()
+    newerJSON()
     export()
     deleteOBJ()
     
@@ -222,7 +236,7 @@ if __name__ == "__main__":
             face_data = json.load(f) #set variable to that object
         origOBJ = input_data["OriginalOBJFile"]
         origOBJpath = os.path.join(directory, origOBJ)
-        modelname = input_data["threeDModel"]
+        modelname = input_data["ThreeDModel"]
         targetOBJ = input_data["TargetOBJFile"]
         targetOBJpath = os.path.join(script_dir, targetOBJ)
         targetJSON = input_data["TargetJSONFile"]

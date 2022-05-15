@@ -1,0 +1,163 @@
+{
+  "ModificationFiles": [
+    {
+      "ThreeDModel": "GF-Normal",
+      "OriginalOBJFile": "GF-Normal.obj",
+      "OriginalJSONFile": "GF-Normal.json",
+      "TargetOBJFile": "GF-Normal-WideNose.obj",
+      "TargetJSONFile": "GF-Normal-Widenose.json",
+      "Folder": ".",
+      "FallOffType": "",
+      "Modifications": [
+        {
+          "Feature-abbrv": "ac_l",
+          "Delta-Magnitude-X": "-5",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "2",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "ac_r",
+          "Delta-Magnitude-X": "5",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "2",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "al_l",
+          "Delta-Magnitude-X": "-1",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "al_r",
+          "Delta-Magnitude-X": "1",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "td_l",
+          "Delta-Magnitude-X": "-1",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "td_r",
+          "Delta-Magnitude-X": "1",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "15",
+          "TransformationType": "Translate"
+        }
+      ]
+    },
+    {
+      "ThreeDModel": "GF-Normal",
+      "OriginalOBJFile": "GF-Normal.obj",
+      "OriginalJSONFile": "GF-Normal.json",
+      "TargetOBJFile": "GF-Normal-DroopingTip.obj",
+      "TargetJSONFile": "GF-Normal-DroopingTip.json",
+      "Folder": ".",
+      "FallOffType": "",
+      "Modifications": [
+        {
+          "Feature-abbrv": "td_r",
+          "Delta-Magnitude-X": "0",
+          "Delta-Magnitude-Y": "-2",
+          "Delta-Magnitude-Z": "-4.5",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        }
+      ]
+    },
+    {
+      "ThreeDModel": "GF-Normal",
+      "OriginalOBJFile": "GF-Normal.obj",
+      "OriginalJSONFile": "GF-Normal.json",
+      "TargetOBJFile": "GF-Normal-Saddle.obj",
+      "TargetJSONFile": "GF-Normal-Saddle.json",
+      "Folder": ".",
+      "FallOffType": "",
+      "Modifications": [
+        {
+          "Feature-abbrv": "prn",
+          "Delta-Magnitude-X": "0",
+          "Delta-Magnitude-Y": "-0.3",
+          "Delta-Magnitude-Z": "4",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "s",
+          "Delta-Magnitude-X": "0",
+          "Delta-Magnitude-Y": "0.8",
+          "Delta-Magnitude-Z": "-0.8",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        }
+      ]
+    },
+    {
+      "ThreeDModel": "GF-Normal",
+      "OriginalOBJFile": "GF-Normal.obj",
+      "OriginalJSONFile": "GF-Normal.json",
+      "TargetOBJFile": "GF-Normal-Hump.obj",
+      "TargetJSONFile": "GF-Normal-Hump.json",
+      "Folder": ".",
+      "FallOffType": "",
+      "Modifications": [
+        {
+          "Feature-abbrv": "r",
+          "Delta-Magnitude-X": "0",
+          "Delta-Magnitude-Y": "-2.9",
+          "Delta-Magnitude-Z": "1.7",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "prn",
+          "Delta-Magnitude-X": "0",
+          "Delta-Magnitude-Y": "0.8",
+          "Delta-Magnitude-Z": "-0.8",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        }
+      ]
+    },
+    {
+      "ThreeDModel": "GF-Normal",
+      "OriginalOBJFile": "GF-Normal.obj",
+      "OriginalJSONFile": "GF-Normal.json",
+      "TargetOBJFile": "GF-Normal-Pinched.obj",
+      "TargetJSONFile": "GF-Normal-Pinched.json",
+      "Folder": ".",
+      "FallOffType": "",
+      "Modifications": [
+        {
+          "Feature-abbrv": "ac_l",
+          "Delta-Magnitude-X": "0.7",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        },
+        {
+          "Feature-abbrv": "ac_r",
+          "Delta-Magnitude-X": "-0.7",
+          "Delta-Magnitude-Y": "0",
+          "Delta-Magnitude-Z": "0",
+          "InfluenceRadius": "20",
+          "TransformationType": "Translate"
+        }
+      ]
+    }
+  ]
+}

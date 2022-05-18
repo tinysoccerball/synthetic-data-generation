@@ -27,7 +27,7 @@ def getJSON():
         kd.insert(v.co, i)
     #blanace the tree
     kd.balance()
-    for feature in face_data["Features"]: #loop through every object in "Features" in Json file
+    for feature in face_data["features"]: #loop through every object in "Features" in Json file
         new_vertex_group = bpy.context.active_object.vertex_groups.new(name=feature["abbrv"])
         #make vertex groups with proper names
         abbrv = feature["abbrv"]
@@ -90,7 +90,7 @@ def cursorReturn():
 
 def newJSON():
     bpy.ops.object.mode_set(mode = 'EDIT')
-    for index in range(len(face_data["Features"])): #loop through all groups
+    for index in range(len(face_data["features"])): #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         bpy.ops.view3d.snap_cursor_to_selected() #snaps 3D cursor to location of selected vertex

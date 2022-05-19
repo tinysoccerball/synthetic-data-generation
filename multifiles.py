@@ -148,7 +148,9 @@ def main():
     
 if __name__ == "__main__":
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    myinp = input("Please enter the path to the JSON file. Please use forward slash / your input: ")
+    myinp = input("Please enter the path to the JSON file: ")
+    myinp = myinp.replace('\\', '/')
+    myinp = myinp.replace('"', '')
     with open(myinp, encoding = 'utf-8') as f: #open JSON file as an object
             main_data = json.load(f) #set variable to that object
     print("Files will be stored in this directory")

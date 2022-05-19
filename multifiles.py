@@ -94,9 +94,9 @@ def newJSON():
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         bpy.ops.view3d.snap_cursor_to_selected() #snaps 3D cursor to location of selected vertex
-        face_data["Features"]["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
-        face_data["Features"]["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
-        face_data["Features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
+        face_data["features"]["xVal"] = round(bpy.context.scene.cursor.location[0], 2)
+        face_data["features"]["yVal"] = round(bpy.context.scene.cursor.location[1], 2)
+        face_data["features"]["zVal"] = round(bpy.context.scene.cursor.location[2], 2)            
         bpy.ops.object.vertex_group_deselect()
         modelname = face_data["ThreeDModel"]
         with open(modelname + '.json', 'w') as outfile:
@@ -108,7 +108,7 @@ def newerJSON():
     bm = bmesh.from_edit_mesh(ob.data)
     bpy.ops.object.mode_set(mode = 'EDIT')
     index = 0
-    for feature in face_data["Features"]: #loop through all groups
+    for feature in face_data["features"]: #loop through all groups
         bpy.context.active_object.vertex_groups.active_index = index
         bpy.ops.object.vertex_group_select()  #select group
         for v in bm.verts:

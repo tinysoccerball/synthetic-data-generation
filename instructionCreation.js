@@ -31,6 +31,7 @@ function everything() {
     var zInputMagnitude = document.getElementById("zmagnitude").value;
     var inputAbbrv = document.getElementById("abbrv").value;
     var modelName = document.getElementById("modelname").value;
+    var falloff = document.getElementById("falloff").value;
 
     function makemods(point, dx, dy, dz, infl) { 
         mod = {
@@ -250,7 +251,7 @@ function everything() {
                 "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
                 "TargetJSONFile": modelName + "-Target-" + counter +".json",
                 "Folder": ".",
-                "FallOffType": "",
+                "FallOffType": falloff,
                 "modifications": biglist[i]//manymods(i)
             }
                 counter++;
@@ -444,5 +445,6 @@ function beginDownload(){
     var inputAbbrv = document.getElementById("abbrv").value;
     var modelName = document.getElementById("modelname").value;
     var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+xInputMagnitude+"_"+yInputMagnitude+"_"+zInputMagnitude+".json";
+    var falloff = document.getElementById("falloff").value;
     download(filename, everything());
 }

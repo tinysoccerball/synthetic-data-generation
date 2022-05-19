@@ -1,6 +1,6 @@
 # synthetic-data-generation
 
-##Runnning Instructions
+## Runnning Instructions
 
 once you have blender installed on your system, you do not have to directly interact with it as we are running it in the background.
 

@@ -26,9 +26,7 @@ function everything() {
     var inputDY = document.getElementById("dy").value;
     var inputDZ = document.getElementById("dz").value;
     var inputInfluence = document.getElementById("influence").value;
-    var xInputMagnitude = document.getElementById("xmagnitude").value;
-    var yInputMagnitude = document.getElementById("ymagnitude").value;
-    var zInputMagnitude = document.getElementById("zmagnitude").value;
+    var inputMagnitude = document.getElementById("magnitude").value;
     var inputAbbrv = document.getElementById("abbrv").value;
     var modelName = document.getElementById("modelname").value;
     var falloff = document.getElementById("falloff").value;
@@ -175,17 +173,6 @@ function everything() {
         return arr;
     }
 
-    function objectProduct(obj) {
-        var keys = Object.keys(obj),
-            values = keys.map(function(x) { return obj[x] });
-    
-        return product(values).map(function(p) {
-            var e = {};
-            keys.forEach(function(k, n) { e[k] = p[n] });
-            return e;
-        });
-    }
-
     const cartesianProduct = (arr1, arr2) => {
         const res = [];
         for(let i = 0; i < arr1.length; i++){
@@ -252,37 +239,12 @@ function everything() {
                 "TargetJSONFile": modelName + "-Target-" + counter +".json",
                 "Folder": ".",
                 "FallOffType": falloff,
-                "modifications": biglist[i]//manymods(i)
+                "modifications": biglist[i]
             }
                 counter++;
                 fileparts.push(file);
         }
         return fileparts;
-    }
-    
-
-
-    function makefile(){
-    file = {
-        "threeDModel": modelName,
-        "OriginalOBJFile": modelName + ".obj",
-        "OriginalJSONFile": modelName + ".json",
-        "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
-        "TargetJSONFile": modelName + "-Target-" + counter +".json",
-        "Folder": ".",
-        "FallOffType": "",
-        "modifications": modlist()
-    }
-    return file
-    }
-
-    function myfiles(){
-    files = []
-    for (i = 0; i < changelist.length; i++) {
-        files.push(makefile())
-        counter++;
-    }
-    return files;
     }
 
     function finalmodfiles(){
@@ -292,25 +254,7 @@ function everything() {
     return modfiles;
     }
 
-
-    //console.log(thejson);
-
-    function revealMessage(){
-        //document.getElementById("jsonOutput") = thejson;
-        document.getElementById("hiddenMessage").style.display = 'block';
-        document.getElementById("Output") = thejson;
-    }
-
     function getUserInput() {
-        let data = {
-            "featurePointAbbrv": "prn",
-            "MagnitudeOfChange": 2,
-            "NumberOfChangeX": 4,
-            "NumberOfChangeY": 3,
-            "NumberOfChangeZ": 2,
-            "InfluenceRadius": 20
-        }
-        
         changes = inputDX;
         if (changes <= inputDY){
         changes = inputDY
@@ -319,52 +263,24 @@ function everything() {
         changes = inputDZ
         }
         
-        var origdirectory = '';
-        var basename = "JuanGlinton";
-        
-        var jsonText = {ModificationFiles:[{
-        threeDModel: "jack",
-        threeDModel: basename,
-        OriginalOBJFile: basename + ".obj",
-        OriginalJSONFile: basename + ".json",
-        TargetOBJFile: basename + "-Target-1.obj",
-        TargetJSONFile: basename + "-Target-1.json",
-        Folder: ".",
-        FallOffType: ""
-        //modifications: modlist()
-        }]
-        };
-        //var modelName = "hank";
-        var modelGender = "Male";
-        var modelAge = 20;
-        /*
-        var test2 = {
-        threeDModel: modelName,
-        gender: modelGender,
-        age: modelAge,
-        //features: createFeatureText(),
-        //measurements: createMeasurementText()
-        };
-        var jsonReadyText = JSON.stringify(jsonText, null, 4);*/
-        ////////////////////////////////////////////////
         changelistlist = [];
         for (i = 0; i < inputs.length; i++){
             for (xmag = 0; xmag < changes; xmag++){
                 for (ymag = 0; ymag < changes; ymag++){
                     for (zmag = 0; zmag < changes; zmag++){
                         changelist.push([dx, dy, dz]);
-                        if (dz < (inputDZ * zInputMagnitude)){
-                            dz += parseInt(zInputMagnitude);
+                        if (dz < (inputDZ * inputMagnitude)){
+                            dz += parseInt(inputMagnitude);
                         }
                         changelist.push([dx, dy, dz]);
                     }
-                    if (dy < inputDY * yInputMagnitude){
-                        dy += parseInt(yInputMagnitude);
+                    if (dy < inputDY * inputMagnitude){
+                        dy += parseInt(inputMagnitude);
                     }
                     dz = 0;
                 }
-                if (dx < (inputDX * xInputMagnitude)){
-                    dx += parseInt(xInputMagnitude);
+                if (dx < (inputDX * inputMagnitude)){
+                    dx += parseInt(inputMagnitude);
                 }
                 dy = 0;
                 dz = 0;
@@ -439,12 +355,10 @@ function beginDownload(){
     var inputDY = document.getElementById("dy").value;
     var inputDZ = document.getElementById("dz").value;
     var inputInfluence = document.getElementById("influence").value;
-    var xInputMagnitude = document.getElementById("xmagnitude").value;
-    var yInputMagnitude = document.getElementById("ymagnitude").value;
-    var zInputMagnitude = document.getElementById("zmagnitude").value;
+    var inputMagnitude = document.getElementById("magnitude").value;
     var inputAbbrv = document.getElementById("abbrv").value;
     var modelName = document.getElementById("modelname").value;
-    var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+xInputMagnitude+"_"+yInputMagnitude+"_"+zInputMagnitude+".json";
+    var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+inputMagnitude+".json";
     var falloff = document.getElementById("falloff").value;
     download(filename, everything());
 }

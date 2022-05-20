@@ -398,7 +398,7 @@ function download(filename, text) {
 }
 
 function addMod() {
-    thisInput = [document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value, document.getElementById("influence").value, document.getElementById("xmagnitude").value, document.getElementById("ymagnitude").value, document.getElementById("zmagnitude").value, document.getElementById("abbrv").value, document.getElementById("modelname").value];
+    thisInput = [document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value, document.getElementById("influence").value, document.getElementById("xmagnitude").value, document.getElementById("ymagnitude").value, document.getElementById("zmagnitude").value, document.getElementById("abbrv").value, document.getElementById("modelname").value, document.getElementById("falloff").value];
     //console.log(thisInput);
     inputs.push(thisInput);
     //alert("Modification Added!");

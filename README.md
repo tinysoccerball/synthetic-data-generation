@@ -14,4 +14,4 @@ Where the prepared blender file is a blender file that has been saved and had th
 Run the command and paste the path to your created json file.
 
 Note:
-Due to the number of outputs and size of the individual outputsthat could possibly be created, you may have to cancel the execution at some point with CTRL+C. If you do this will a file is being exported, it can lead to an incomplete file. Such a file can be disregarded and discarded.
+Due to the number of outputs and size of the individual outputs that could possibly be created, you may have to cancel the execution at some point with CTRL+C. If you do this will a file is being exported, it can lead to an incomplete file. Such a file can be disregarded and discarded.

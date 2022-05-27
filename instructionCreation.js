@@ -1,342 +1,236 @@
 inputs = [];
-let modcount = 0;
+let modificationsCount = 0;
+let counter = 1;
+let allChangeList = [];
 
-const cartesian =
-        (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-
-function cartesianCalc(arr){
-    let output = [];
-    for(i = 0; i < (arr.length - 1); i++) {
-        console.log("hello Juan");
-        console.log(cartesian(arr[i], arr[i+1]));
-        console.log("Hello World");
-        output.push(cartesian(arr[i], arr[i+1]));
-    }
-    return output;
-}
-
-function everything() {
-    let counter = 1;
-    var dx = 0;
-    var dy = 0;
-    var dz = 0;
-    var changelist = [];
-
-    var inputDX = document.getElementById("dx").value;
-    var inputDY = document.getElementById("dy").value;
-    var inputDZ = document.getElementById("dz").value;
-    var inputInfluence = document.getElementById("influence").value;
-    var inputMagnitude = document.getElementById("magnitude").value;
-    var inputAbbrv = document.getElementById("abbrv").value;
-    var modelName = document.getElementById("modelname").value;
-    var falloff = document.getElementById("falloff").value;
-
-    function makemods(point, dx, dy, dz, infl) { 
-        mod = {
+function modificationJSON(point, dx, dy, dz, infl, transformation) {
+    modification = {
         "feature-abbrv": point,
         "deltaX": dx,
         "deltaY": dy,
         "deltaZ": dz,
-        "InfluenceRadius": infl
-                }
-    //console.log(mod);
-        return mod;
-    }
-
-    function combineArrays( array_of_arrays ){
-
-        // First, handle some degenerate cases...
-    
-        if( ! array_of_arrays ){
-            // Or maybe we should toss an exception...?
-            return [];
-        }
-    
-        if( ! Array.isArray( array_of_arrays ) ){
-            // Or maybe we should toss an exception...?
-            return [];
-        }
-    
-        if( array_of_arrays.length == 0 ){
-            return [];
-        }
-    
-        for( let i = 0 ; i < array_of_arrays.length; i++ ){
-            if( ! Array.isArray(array_of_arrays[i]) || array_of_arrays[i].length == 0 ){
-                // If any of the arrays in array_of_arrays are not arrays or zero-length, return an empty array...
-                return [];
+        "InfluenceRadius": infl,
+        "TransformationType": transformation
             }
-        }
-    
-        // Done with degenerate cases...
-    
-        // Start "odometer" with a 0 for each array in array_of_arrays.
-        let odometer = new Array( array_of_arrays.length );
-        odometer.fill( 0 ); 
-    
-        let output = [];
-    
-        let newCombination = formCombination( odometer, array_of_arrays );
-    
-        output.push( newCombination );
-    
-        while ( odometer_increment( odometer, array_of_arrays ) ){
-            newCombination = formCombination( odometer, array_of_arrays );
-            output.push( newCombination );
-        }
-        //output = JSON.stringify(output, null, 4)
-        return output;
-    }/* combineArrays() */
+    return modification;
+}
 
-
-    // Translate "odometer" to combinations from array_of_arrays
-    function formCombination( odometer, array_of_arrays ){
-    // In Imperative Programmingese (i.e., English):
-     let s_output = "";
-     for( let i=0; i < odometer.length; i++ ){
-        s_output += "" + array_of_arrays[i][odometer[i]]; 
-     }
-     return s_output;
-
-    // In Functional Programmingese (Henny Youngman one-liner):
-    //return odometer.reduce(
-    //  function(accumulator, odometer_value, odometer_index){
-    //    return "" + accumulator + array_of_arrays[odometer_index][odometer_value];
-    //  },
-    //  ""
-    //);
-    }   /* formCombination() */
-
-    function odometer_increment( odometer, array_of_arrays ){
-
-        // Basically, work you way from the rightmost digit of the "odometer"...
-        // if you're able to increment without cycling that digit back to zero,
-        // you're all done, otherwise, cycle that digit to zero and go one digit to the
-        // left, and begin again until you're able to increment a digit
-        // without cycling it...simple, huh...?
-
-        for( let i_odometer_digit = odometer.length-1; i_odometer_digit >=0; i_odometer_digit-- ){ 
-
-            let maxee = array_of_arrays[i_odometer_digit].length - 1;         
-
-            if( odometer[i_odometer_digit] + 1 <= maxee ){
-                // increment, and you're done...
-                odometer[i_odometer_digit]++;
-                return true;
+function targetModificationsJSON(modelName, counter, falloff, modifications) {
+    targetModifications = {
+        "threeDModel": modelName,
+        "OriginalOBJFile": modelName + ".obj",
+        "OriginalJSONFile": modelName + ".json",
+        "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
+        "TargetJSONFile": modelName + "-Target-" + counter +".json",
+        "Folder": ".",
+        "FallOffType": falloff,
+        "Modifications": modifications
             }
-            else{
-                if( i_odometer_digit - 1 < 0 ){
-                    // No more digits left to increment, end of the line...
-                    return false;
-                }
-                else{
-                    // Can't increment this digit, cycle it to zero and continue
-                    // the loop to go over to the next digit...
-                    odometer[i_odometer_digit]=0;
-                    continue;
-                }
-            }
-        }/* for( let odometer_digit = odometer.length-1; odometer_digit >=0; odometer_digit-- ) */
+    return targetModifications;
+}
 
-    }/* odometer_increment() */
 
-    function uniq(a) {
-        return a.sort().filter(function(item, pos, ary) {
-            return !pos || item != ary[pos - 1];
-        });
+function allModificationsJSON() {
+    var modelname = document.getElementById("modelname").value;
+    var falloff = document.getElementById("falloff").value;
+    
+    var allTargetChanges = [];
+    counter = 0;
+
+    loopContinue = true;
+    loopIndexCurrent = [];
+    loopIndexLength = [];
+    for(i = 0; i < allChangeList.length; i++){
+        loopIndexCurrent.push(0);
+        loopIndexLength.push(allChangeList[i].length);
+        //console.log('current:' + loopIndexCurrent[i] + " - length:" + loopIndexLength[i]);
     }
     
-    function arraysEqual(a, b) {
-        if (a === b) return true;
-        if (a == null || b == null) return false;
-        if (a.length !== b.length) return false;
-      
-        // If you don't care about the order of the elements inside
-        // the array, you should sort both arrays here.
-        // Please note that calling sort on an array will modify that array.
-        // you might want to clone your array first.
-      
-        for (var i = 0; i < a.length; ++i) {
-          if (a[i] !== b[i]) return false;
+    //console.log('loop starts');
+    while (loopContinue)
+    {
+        //console.log('loop next items');
+        j = 0;
+        var targetChanges = [];
+        for (i = 0; i < loopIndexCurrent.length; i++)
+        {
+            console.log(i + ": " + loopIndexCurrent[i]);
+            j = loopIndexCurrent[i];
+            targetChanges.push(
+                               modificationJSON(allChangeList[i][j][0],
+                                 allChangeList[i][j][1],
+                                 allChangeList[i][j][2],
+                                 allChangeList[i][j][3],
+                                 allChangeList[i][j][4],
+                                allChangeList[i][j][5] )
+                               );
         }
-        return true;
-      }
-    
-    function removeDuplicates(arr) {
-        for (i= 0; i<arr.length; i++){
-            if (arraysEqual(arr[i], arr[i+1])){
-                arr.splice(i, 1); 
-                i--; 
-                //console.log("discarded " + i + ' ' + arr);
+        counter++;
+        allTargetChanges.push(targetModificationsJSON(modelname, counter, falloff, targetChanges));
+
+        // This for loop prepares the index of the next item
+        // Increments the index of the last abbrv
+        // If the last abbrv index exceeds the number of items (length),
+        // it increments the previous item's index
+        // If first item's (i == 0) current index reaches its length,
+        // then it means we are done with the outher loop
+        for (i = loopIndexCurrent.length-1; i >= 0; i--)
+        {
+            loopIndexCurrent[i] ++;
+            if (loopIndexCurrent[i] < loopIndexLength[i])
+            {
+                break;
+            }
+            else if (i == 0)
+            {
+                loopContinue = false;
+            }
+            else
+            {
+                loopIndexCurrent[i] = 0;
             }
         }
-        return arr;
     }
+    //console.log('loop ended');
+    return allTargetChanges;
+}
 
-    const cartesianProduct = (arr1, arr2) => {
-        const res = [];
-        for(let i = 0; i < arr1.length; i++){
-           for(let j = 0; j < arr2.length; j++){
-              res.push(
-                 [arr1[i]].concat(arr2[j])
-              );
-           };
-        };
-        return res;
-     };
-     
-
-    function manymods(i) {
-        holding = [];
-        smalllist = [];
-        secondary = [];
-        thismod = [];
-        for(i = 0; i < (changelistlist.length); i++){
-            for (j = 0; j < changelistlist[i].length; j++){
-                holding.push(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence);
-                thismod.push(makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence));
-                smalllist.push(holding);
-                holding = [];
-            }
-            secondary.push(thismod);
-            thismod = [];
-        }
-        //let biglist = cartesianCalc(secondary);// cartesianProduct(secondary[0], secondary[1]);
-        //console.log(biglist);
-        return biglist[i];
-    }
-
-    function modlist() {
-        holding = [];
-        smalllist = [];
-        secondary = [];
-        thismod = [];
-        for(i = 0; i < (changelistlist.length); i++){
-            for (j = 0; j < changelistlist[i].length; j++){
-                holding.push(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence);
-                thismod.push(makemods(inputs[i][7], changelistlist[i][j][0], changelistlist[i][j][1], changelistlist[i][j][2], inputInfluence));
-                smalllist.push(holding);
-                holding = [];
-            }
-            secondary.push(thismod);
-            thismod = [];
-        }
-        let biglist = cartesianProduct(secondary[0], secondary[1]);
-        fileparts = [];
-        thismod = [];
-        counter = 0;
-        changelist = removeDuplicates(changelist);
-        for (i = 0; i < changelistlist.length - 1; i++){
-            //changelistlist[i] = removeDuplicates(changelistlist[i]);
-            changelistlist[i+1] = removeDuplicates(changelistlist[i+1]);
-        }
-        for(i = 0; i < (biglist.length); i++){
-            file = {
-                "threeDModel": modelName,
-                "OriginalOBJFile": modelName + ".obj",
-                "OriginalJSONFile": modelName + ".json",
-                "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
-                "TargetJSONFile": modelName + "-Target-" + counter +".json",
-                "Folder": ".",
-                "FallOffType": falloff,
-                "modifications": biglist[i]
-            }
-                counter++;
-                fileparts.push(file);
-        }
-        return fileparts;
-    }
-
-    function finalmodfiles(){
+function finalModificationsJSON(){
     modfiles = {
-        "ModificationFiles":modlist()
+        "ModificationFiles":allModificationsJSON()
     }
     return modfiles;
+}
+
+function prepareChanges() {
+
+    for (i = 0; i < inputs.length; i++) {
+        // get inner array
+        var vals = inputs[i];
+        var currentInfl = vals[6];
+        var iterationNo = parseInt(vals[7]); //changenumber
+        var currentAbbrv = vals[8];
+        var currentTranslation = vals[11];
+        var startX = 0.0;
+        var startY = 0.0;
+        var startZ = 0.0;
+        var changeDx = 0.0;
+        var changeDy = 0.0;
+        var changeDz = 0.0;
+        var changes = [];
+        //dx, dy, dz, influence, changenumber, abbrv, modelname, falloff
+        for (var j = 0; j < iterationNo; j++) {
+            changeDx = parseFloat(vals[0]) + (parseFloat(vals[3]) * j);
+            changeDy = parseFloat(vals[1]) + (parseFloat(vals[4]) * j);
+            changeDz = parseFloat(vals[2]) + (parseFloat(vals[5]) * j);
+            changes.push([currentAbbrv,
+                          changeDx,
+                          changeDy,
+                          changeDz,
+                          currentInfl,
+                          currentTranslation]);
+        }
+        console.log(changes);
+        allChangeList.push(changes);
     }
+}
 
-    function getUserInput() {
-        changes = inputDX;
-        if (changes <= inputDY){
-        changes = inputDY
-        }
-        if (changes <= inputDZ){
-        changes = inputDZ
-        }
-        
-        changelistlist = [];
-        for (i = 0; i < inputs.length; i++){
-            for (xmag = 0; xmag < changes; xmag++){
-                for (ymag = 0; ymag < changes; ymag++){
-                    for (zmag = 0; zmag < changes; zmag++){
-                        changelist.push([dx, dy, dz]);
-                        if (dz < (inputDZ * inputMagnitude)){
-                            dz += parseInt(inputMagnitude);
-                        }
-                        changelist.push([dx, dy, dz]);
-                    }
-                    if (dy < inputDY * inputMagnitude){
-                        dy += parseInt(inputMagnitude);
-                    }
-                    dz = 0;
-                }
-                if (dx < (inputDX * inputMagnitude)){
-                    dx += parseInt(inputMagnitude);
-                }
-                dy = 0;
-                dz = 0;
-                }
-            changelistlist.push(changelist);
-            //console.log(changelistlist);
-            changelist = [];
-            dx = 0;
-        }
-        
-
-        var thejson = JSON.stringify(finalmodfiles(), null, 4);
+function prepareJSON() {
+        prepareChanges();
+        var thejson = JSON.stringify(finalModificationsJSON(), null, 4);// last parameter is for space
         return thejson;
-    }
-    console.log(getUserInput());
-    //console.log(modlist());
-    return getUserInput(); 
 }
 
-function download(filename, text) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-}
-
-function addMod() {
-    thisInput = [document.getElementById("dx").value, document.getElementById("dy").value, document.getElementById("dz").value, document.getElementById("influence").value, document.getElementById("xmagnitude").value, document.getElementById("ymagnitude").value, document.getElementById("zmagnitude").value, document.getElementById("abbrv").value, document.getElementById("modelname").value, document.getElementById("falloff").value];
+function addModification() {
+    //startx, starty, startz, dx, dy, dz, influence, changenumber, abbrv, modelname, falloff, translation
+    currentInput = [document.getElementById("startx").value,
+                    document.getElementById("starty").value,
+                    document.getElementById("startz").value,
+                    document.getElementById("dx").value,
+                    document.getElementById("dy").value,
+                    document.getElementById("dz").value,
+                    document.getElementById("influence").value,
+                    document.getElementById("changenumber").value,
+                    document.getElementById("abbrv").value,
+                    document.getElementById("modelname").value,
+                    document.getElementById("falloff").value,
+                    document.getElementById("transformation").value
+                    ];
     //console.log(thisInput);
-    inputs.push(thisInput);
+    inputs.push(currentInput);
     //alert("Modification Added!");
     //console.log(inputs);
-    modcount++;
+    modificationsCount++;
     var container = document.getElementById('container');
     container.innerHTML = '';
     // create table element
     var table = document.createElement('table');
     var tbody = document.createElement('tbody');
     // loop array
+
+    var row = document.createElement('tr');
+    var cell = document.createElement('td');
+    cell.textContent = "Start X";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Start Y";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Start Z";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Magnitude X";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Magnitude Y";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Magnitude Z";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Influence";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Number of Iterations";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Abbrv";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Model Name";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Fall Off";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    var cell = document.createElement('td');
+    cell.textContent = "Transformation";
+    cell.style.border = '1px solid black';
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    
     for (i = 0; i < inputs.length; i++) {
         // get inner array
         var vals = inputs[i];
         // create tr element
         var row = document.createElement('tr');
         // loop inner array
-        for (var b = 0; b < vals.length; b++) {
+        for (var j = 0; j < vals.length; j++) {
             // create td element
             var cell = document.createElement('td');
             // set text
-            cell.textContent = vals[b];
+            cell.textContent = vals[j];
+            cell.style.border = '1px solid black';
             // append td to tr
             row.appendChild(cell);
         }
@@ -349,16 +243,32 @@ function addMod() {
     container.appendChild(table);
 }
 
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
 // Start file download.
-function beginDownload(){
-    var inputDX = document.getElementById("dx").value;
-    var inputDY = document.getElementById("dy").value;
-    var inputDZ = document.getElementById("dz").value;
-    var inputInfluence = document.getElementById("influence").value;
-    var inputMagnitude = document.getElementById("magnitude").value;
-    var inputAbbrv = document.getElementById("abbrv").value;
+function downloadJSON(){
+    var inputAbbrvs = "";
+    for (i = 0; i < inputs.length; i++) {
+        console.log(inputAbbrvs);
+        // get inner array
+        var vals = inputs[i];
+        if (i>0)
+            inputAbbrvs = inputAbbrvs + "_" + vals[8];
+        else
+            inputAbbrvs = vals[8];
+    }
     var modelName = document.getElementById("modelname").value;
-    var filename = modelName+"_"+inputAbbrv+"_"+inputDX+"_"+inputDY+"_"+inputDZ+"_"+inputInfluence+"_"+inputMagnitude+".json";
-    var falloff = document.getElementById("falloff").value;
-    download(filename, everything());
+    var filename = modelName + "_" + inputAbbrvs + ".json";
+    console.log(inputAbbrvs);
+    console.log(filename);
+    download(filename, prepareJSON());
 }

@@ -6,9 +6,13 @@ import json #allows us to parse and create JSON files
 
 def bringOBJ():#import .obj file into scene
     file_loc = origOBJpath
-    imported_object = bpy.ops.import_scene.obj(filepath=file_loc)
+    imported_object = bpy.ops.import_scene.obj(filepath=file_loc) 
+    #The blender API, when importing an object into the scene, must store that object in a variable.
+    #The imported_object variable will not be accessed but is initialized to permit the import.
     obj_object = bpy.context.selected_objects[0] #sets variable to select object
-    bpy.context.view_layer.objects.active = obj_object #selects object
+    bpy.context.view_layer.objects.active = obj_object #makes the selected object active.
+    #There are 3 states an object can be in in Blender: inactive, active, and selected.
+    #The active and selected states typically coincide with one another but are not necessarily the same
     print('Imported name: ', obj_object.name)
        
 def getJSON(): #read file data from JSON file and create vertex groups corresponding to landmarks
@@ -20,19 +24,23 @@ def getJSON(): #read file data from JSON file and create vertex groups correspon
     bpy.ops.object.mode_set( mode = 'OBJECT' ) #set mode to Object
     bpy.ops.object.mode_set(mode = 'OBJECT') #mode to Object
     #implementing the kd tree
-    #we use the KD tree to find the closest vertex to a given coordinate. We place the 3D cursor at the coordinates specified.
-    #Then we use the KD Tree to  search for the vertex that is closest to the 3D cursor. That vertex then is added to a vertex group
-    #representing a landmark. The landmark can then be manipulated by manipulating the vertex group.
     mesh = obj_object.data
     size = len(mesh.vertices)
     kd = mathutils.kdtree.KDTree(size)
+    #In order to create the landmark groups we will be using a KD tree.
+    #Landmark coordinates are read from the object's data JSON file.
+    #The 3D cursor is placed at that those coordinates.
+    #We then use the KD tree to search the scene for the closest vertex to the 3D cursor.
+    #That vertex is designated as that landmark by adding it to a vertex group that can be referenced later.
+    #Since the vertex may not be exactly where the landmark specified, there may be a slight shift in the location.
+    #This is necessary as we are manipulating the model through the vertices.
     for i, v in enumerate(mesh.vertices):
         kd.insert(v.co, i)
     #blanace the tree
     kd.balance()
     for feature in face_data["features"]: #loop through every object in "Features" in Json file
         new_vertex_group = bpy.context.active_object.vertex_groups.new(name=feature["abbrv"])
-        #make vertex groups with proper names
+        #make vertex groups that represent the landmarks
         abbrv = feature["abbrv"]
         negx = feature["xVal"]
         negy = feature["yVal"]
@@ -41,32 +49,39 @@ def getJSON(): #read file data from JSON file and create vertex groups correspon
         y = float(negy)
         z = float(negz)
         bpy.context.scene.cursor.location = (-x, -z, y) 
+        #Here is where we place the 3D cursor according to the coordinates given.
+        #Note the unconventional coordinates.
+        #This is because Blender uses a different coordinate system than most other applications.
+        #This means that we must mathematically rotate our coordinate system when interfacing between the two.
         co_find = obj.matrix_world.inverted() @ bpy.context.scene.cursor.location
         #Search Using KD Tree
         co, index, dist = kd.find(co_find)
         kd.find_range(co_find, 0.1) #Implementing tolerance size
         obj.data.vertices[index].select = True #select chosen vertex
-        vertex_group_data = [index]
+        vertex_group_data = [index] #select the vertex group we are going to add to.
         new_vertex_group.add(vertex_group_data, 1.0, 'ADD') #add vertex to created group
         obj.data.vertices[index].select = False #Deselect Vertex
         
 def scale(vgroup, dx, dy, dz, prop_size): #uses a multiplier that scales the distace of a point from the origin.
-    falloff = input_data["FallOffType"]
-    if falloff == "":
+    falloff = input_data["FallOffType"] #read the falloff type specified in the instructions
+    if falloff == "": #if no falloff is given default to smooth
         falloff = "SMOOTH"
-    bpy.ops.object.mode_set(mode = 'EDIT')
-    bpy.ops.object.vertex_group_set_active(group=vgroup) 
+    bpy.ops.object.mode_set(mode = 'EDIT') #set to edit mode
+    bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
     bpy.ops.object.vertex_group_select()
+    #this function performs a scale. It calculayted the distance of a point from the origin and applies a multiplier to that distance.
+    #This can be restricted along certain axis or axes.
     bpy.ops.transform.resize(value=(dx, dy, dz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=prop_size, use_proportional_connected=True, use_proportional_projected=False)
     bpy.ops.object.vertex_group_deselect()
 
 def translate(vgroup, dx, dy, dz, prop_size): #moves the vertex in 3D space by adding values to its positional coordinates
-    falloff = input_data["FallOffType"]
+    falloff = input_data["FallOffType"]#read the falloff type specified in the instructions
     if falloff == "": #if no falloff is given default to smooth
         falloff = "SMOOTH"
-        bpy.ops.object.mode_set(mode = 'EDIT')
-        bpy.ops.object.vertex_group_set_active(group=vgroup) 
-        bpy.ops.object.vertex_group_select()
+        bpy.ops.object.mode_set(mode = 'EDIT') #set to edit mode
+        bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
+        bpy.ops.object.vertex_group_select() 
+        #this function performs a translation on a point. The point is moved in 3D space based on adding the given delta values to its coordinates.
         bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
         bpy.ops.object.vertex_group_deselect()
 
@@ -80,6 +95,7 @@ def transformMesh(): #reads transformation instructions from the JSON instructio
         vgroup = modification["Feature-abbrv"]
         bpy.ops.object.vertex_group_set_active(group=vgroup) 
         bpy.ops.object.vertex_group_select()
+        #calls the appropirate function based on which modification was specified.
         if modification["TransformationType"] == "Scale":
             scale(vgroup, float(dx), float(dy), float(dz), float(prop_size))
         elif modification["TransformationType"] == "Translate":
@@ -94,7 +110,7 @@ def cursorReturn(): #returns the cursor to origin
 def newerJSON(): #create new JSON file data for output file model
     bm = bmesh.new()
     ob = bpy.context.active_object
-    bm = bmesh.from_edit_mesh(ob.data)
+    bm = bmesh.from_edit_mesh(ob.data) #using the bmesh module to get vertex location data
     bpy.ops.object.mode_set(mode = 'EDIT')
     index = 0
     for feature in face_data["features"]: #loop through all groups
@@ -103,28 +119,31 @@ def newerJSON(): #create new JSON file data for output file model
         for v in bm.verts:
             if v.select:
                 tup = tuple(v.co)
+        #for every vertex group, select the vertex and store its coordinates to the tup array
         feature["xVal"] = -(round(tup[0], 2))
         feature["yVal"] = (round(tup[1], 2))
         feature["zVal"] = (round(tup[2], 2))
+        #overwrite the coordinates in the new JSON file with the coordinates of the landmarks as they are after transformation.
+        # ensuring to mathematically rotate the orientation as we are once again interfacing outside of blender. 
         bpy.ops.object.vertex_group_deselect()
         modelname = face_data["ThreeDModel"]
         index = index + 1
     target_file = os.path.join(directory, targetJSON)
     with open(target_file, 'w') as outfile:
         json.dump(face_data, outfile, indent=4)
+        #create new json file with updated data
     print("Created new JSON file titled: " + target_file)
 
-def export():#export the file as .obj
+def export():#export the transformed model as a .obj file
     bpy.ops.object.mode_set(mode = 'OBJECT') #mode to object
     target_file = os.path.join(directory, targetOBJ)
     print(target_file)
-    full_target_file = target_file + ".obj" #adds file extension so the computer doesn't get mad
     bpy.ops.export_scene.obj(filepath=target_file) #actually export the file
 
 def deleteOBJ():#prevent context errors that arise from object not being deleted
     if bpy.context.object.mode == 'EDIT': #make sure its in object mode
         bpy.ops.object.mode_set(mode='OBJECT') #change it if its not
-    bpy.ops.object.delete() #delete it
+    bpy.ops.object.delete() #delete model
 
 def main():
     bringOBJ() 
@@ -138,8 +157,8 @@ def main():
 if __name__ == "__main__":
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     myinp = input("Please enter the path to the JSON file: ")
-    myinp = myinp.replace('\\', '/')
-    myinp = myinp.replace('"', '')
+    myinp = myinp.replace('\\', '/') #this allows for slashes to be corrected in a pasted file path
+    myinp = myinp.replace('"', '') #removes quotations from pasted file path
     with open(myinp, encoding = 'utf-8') as f: #open JSON file as an object
             main_data = json.load(f) #set variable to that object
     print("Files will be stored in this directory")

@@ -128,6 +128,7 @@ def newerJSON(): #create new JSON file data for output file model
         bpy.ops.object.vertex_group_deselect()
         modelname = face_data["ThreeDModel"]
         index = index + 1
+    face_data["measurements"].clear()
     target_file = os.path.join(directory, targetJSON)
     with open(target_file, 'w') as outfile:
         json.dump(face_data, outfile, indent=4)
@@ -161,10 +162,13 @@ if __name__ == "__main__":
     myinp = myinp.replace('"', '') #removes quotations from pasted file path
     with open(myinp, encoding = 'utf-8') as f: #open JSON file as an object
             main_data = json.load(f) #set variable to that object
+    #The file data is stored in a JSON file which is an object notation.
+    #Using python's json library, we are reading that file and making a copy of that object in memory
+    #We are then storing that object as a python dictionary and assigning it to a variable.
     print("Files will be stored in this directory")
     directory = os.path.dirname(myinp)
     print(directory)
-    #Pull out original json file, buid path to it and open it as face_data
+    #For every file specified in the ModificationFiles array, assign the variables to be the data specified in those files and run main again.
     for file in main_data["ModificationFiles"]:
         input_data = file
         origJSON = input_data["OriginalJSONFile"]

@@ -5,10 +5,10 @@ let allChangeList = [];
 
 function modificationJSON(point, dx, dy, dz, infl, transformation) {
     modification = {
-        "feature-abbrv": point,
-        "deltaX": dx,
-        "deltaY": dy,
-        "deltaZ": dz,
+        "Feature-abbrv": point,
+        "Delta-Magnitude-X": dx,
+        "Delta-Magnitude-Y": dy,
+        "Delta-Magnitude-Z": dz,
         "InfluenceRadius": infl,
         "TransformationType": transformation
             }

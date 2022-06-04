@@ -126,7 +126,7 @@ def newerJSON(): #create new JSON file data for output file model
         #overwrite the coordinates in the new JSON file with the coordinates of the landmarks as they are after transformation.
         # ensuring to mathematically rotate the orientation as we are once again interfacing outside of blender. 
         bpy.ops.object.vertex_group_deselect()
-        modelname = face_data["ThreeDModel"]
+        modelname = face_data["threeDModel"]
         index = index + 1
     face_data["measurements"].clear()
     target_file = os.path.join(directory, targetJSON)
@@ -177,7 +177,7 @@ if __name__ == "__main__":
             face_data = json.load(f) #set variable to that object
         origOBJ = input_data["OriginalOBJFile"]
         origOBJpath = os.path.join(directory, origOBJ)
-        modelname = input_data["ThreeDModel"]
+        modelname = input_data["threeDModel"]
         targetOBJ = input_data["TargetOBJFile"]
         targetOBJpath = os.path.join(script_dir, targetOBJ)
         targetJSON = input_data["TargetJSONFile"]

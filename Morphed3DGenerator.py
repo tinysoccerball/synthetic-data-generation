@@ -14,6 +14,19 @@ def bringOBJ():#import .obj file into scene
     #There are 3 states an object can be in in Blender: inactive, active, and selected.
     #The active and selected states typically coincide with one another but are not necessarily the same
     print('Imported name: ', obj_object.name)
+
+def join(): #In case the obj file contained multiple objects, join them all into one object
+    #Deselect all
+    bpy.ops.object.select_all(action='DESELECT')
+    #Mesh objects
+    MSH_OBJS = [m for m in bpy.context.scene.objects if m.type == 'MESH']
+    for OBJS in MSH_OBJS:
+        #Select all mesh objects
+        OBJS.select_set(state=True)
+        #Makes one active
+        bpy.context.view_layer.objects.active = OBJS
+    #Joins objects
+    bpy.ops.object.join()
        
 def getJSON(): #read file data from JSON file and create vertex groups corresponding to landmarks
     obj = bpy.context.active_object #sets a variable that allows for more readable code
@@ -78,12 +91,14 @@ def translate(vgroup, dx, dy, dz, prop_size): #moves the vertex in 3D space by a
     falloff = input_data["FallOffType"]#read the falloff type specified in the instructions
     if falloff == "": #if no falloff is given default to smooth
         falloff = "SMOOTH"
-        bpy.ops.object.mode_set(mode = 'EDIT') #set to edit mode
-        bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
-        bpy.ops.object.vertex_group_select() 
-        #this function performs a translation on a point. The point is moved in 3D space based on adding the given delta values to its coordinates.
-        bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
-        bpy.ops.object.vertex_group_deselect()
+    #bpy.ops.object.mode_set(mode = 'EDIT') #set to edit mode
+    bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
+    #bpy.ops.object.vertex_group_select() 
+    #this function performs a translation on a point. The point is moved in 3D space based on adding the given delta values to its coordinates.
+    print(dx, dy, dz, prop_size, falloff)
+    bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
+    bpy.ops.object.vertex_group_deselect()
+    print("translation done")
 
 def transformMesh(): #reads transformation instructions from the JSON instruction file and manipulates the mesh
     for modification in input_data["Modifications"]:
@@ -97,11 +112,13 @@ def transformMesh(): #reads transformation instructions from the JSON instructio
         bpy.ops.object.vertex_group_select()
         #calls the appropirate function based on which modification was specified.
         if modification["TransformationType"] == "Scale":
+            print("SCALE SELECTED")
             scale(vgroup, float(dx), float(dy), float(dz), float(prop_size))
-        elif modification["TransformationType"] == "Translate":
+        elif modification["TransformationType"] == "Translation":
+            print("TRANSLATE SELECTED")
             translate(vgroup, float(dx), float(dy), float(dz), float(prop_size))
         else:
-            pass
+            print("TRANSFORMATION FAILED")
 
 def cursorReturn(): #returns the cursor to origin
     bpy.context.scene.cursor.location = (0, 0, 0)
@@ -147,7 +164,8 @@ def deleteOBJ():#prevent context errors that arise from object not being deleted
     bpy.ops.object.delete() #delete model
 
 def main():
-    bringOBJ() 
+    bringOBJ()
+    join() 
     getJSON()
     transformMesh()
     cursorReturn()

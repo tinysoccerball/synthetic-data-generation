@@ -95,10 +95,8 @@ def translate(vgroup, dx, dy, dz, prop_size): #moves the vertex in 3D space by a
     bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
     #bpy.ops.object.vertex_group_select() 
     #this function performs a translation on a point. The point is moved in 3D space based on adding the given delta values to its coordinates.
-    print(dx, dy, dz, prop_size, falloff)
     bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
     bpy.ops.object.vertex_group_deselect()
-    print("translation done")
 
 def transformMesh(): #reads transformation instructions from the JSON instruction file and manipulates the mesh
     for modification in input_data["Modifications"]:
@@ -112,10 +110,8 @@ def transformMesh(): #reads transformation instructions from the JSON instructio
         bpy.ops.object.vertex_group_select()
         #calls the appropirate function based on which modification was specified.
         if modification["TransformationType"] == "Scale":
-            print("SCALE SELECTED")
             scale(vgroup, float(dx), float(dy), float(dz), float(prop_size))
         elif modification["TransformationType"] == "Translation":
-            print("TRANSLATE SELECTED")
             translate(vgroup, float(dx), float(dy), float(dz), float(prop_size))
         else:
             print("TRANSFORMATION FAILED")

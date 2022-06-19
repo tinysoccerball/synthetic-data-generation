@@ -148,11 +148,43 @@ def newerJSON(): #create new JSON file data for output file model
         #create new json file with updated data
     print("Created new JSON file titled: " + target_file)
 
+def mtlPath(input):
+    MYFILE = input[:-3] + "mtl"
+    print("MTL file to be adjusted: " + MYFILE)
+    with open(MYFILE, "r", encoding="utf-8") as f:
+        mtl = f.readlines()
+        last_line = mtl[-1]
+    path = last_line.split()[-1]
+    filename = path.split("/")[-1]
+    path = filename
+    splitlines = last_line.split()
+    while len(splitlines) > 2:
+        splitlines.pop(1)
+    splitlines[1] = filename
+    splitlines.insert(1, ' ')
+    attempt = [''.join(splitlines)]
+    string = attempt[0]
+    #for line in mtl:
+    #    pass
+    #line = string
+    print(mtl)
+    mtl[-1] = string
+    # read the file into a list of lines
+    with open(MYFILE, 'r') as f:
+        lines = f.readlines()
+    # now edit the last line of the list of lines
+    lines[-1] = string
+    # now write the modified list back out to the file0
+    #open(MYFILE, 'w').writelines(lines)
+    with open(MYFILE, 'w') as f:
+        f.writelines(lines)
+
 def export():#export the transformed model as a .obj file
     bpy.ops.object.mode_set(mode = 'OBJECT') #mode to object
     target_file = os.path.join(directory, targetOBJ)
     print(target_file)
     bpy.ops.export_scene.obj(filepath=target_file) #actually export the file
+    mtlPath(target_file)
 
 def deleteOBJ():#prevent context errors that arise from object not being deleted
     if bpy.context.object.mode == 'EDIT': #make sure its in object mode

@@ -3,9 +3,9 @@ let modificationsCount = 0;
 let counter = 1;
 let allChangeList = [];
 
-function modificationJSON(point, dx, dy, dz, infl, transformation) {
+function modificationJSON(abbrv, dx, dy, dz, infl, transformation) {
     modification = {
-        "Feature-abbrv": point,
+        "Feature-abbrv": abbrv,
         "Delta-Magnitude-X": dx,
         "Delta-Magnitude-Y": dy,
         "Delta-Magnitude-Z": dz,
@@ -15,9 +15,9 @@ function modificationJSON(point, dx, dy, dz, infl, transformation) {
     return modification;
 }
 
-function targetModificationsJSON(modelName, counter, falloff, modifications) {
+function targetModificationsJSON(counter, modelName, falloff, modifications) {
     targetModifications = {
-        "threeDModel": modelName,
+        "ThreeDModel": modelName,
         "OriginalOBJFile": modelName + ".obj",
         "OriginalJSONFile": modelName + ".json",
         "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
@@ -57,16 +57,32 @@ function allModificationsJSON() {
             console.log(i + ": " + loopIndexCurrent[i]);
             j = loopIndexCurrent[i];
             targetChanges.push(
-                               modificationJSON(allChangeList[i][j][0],
-                                 allChangeList[i][j][1],
-                                 allChangeList[i][j][2],
-                                 allChangeList[i][j][3],
-                                 allChangeList[i][j][4],
-                                allChangeList[i][j][5] )
+                               //(abbrv, dx, dy, dz, infl, transformation)
+                               modificationJSON(
+                                                allChangeList[i][j][0],
+                                                allChangeList[i][j][3],
+                                                allChangeList[i][j][4],
+                                                allChangeList[i][j][5],
+                                                allChangeList[i][j][6],
+                                                allChangeList[i][j][7]                                                )
                                );
+            if (allChangeList[i][j][1] == 'Y')
+            {
+                targetChanges.push(
+                                   //(dualabbrv, -dx, -dy, -dz, infl, transformation)
+                                   modificationJSON(
+                                                    allChangeList[i][j][2],
+                                                    (allChangeList[i][j][3] * -1),
+                                                    (allChangeList[i][j][4] * -1),
+                                                    (allChangeList[i][j][5] * -1),
+                                                    allChangeList[i][j][6],
+                                                    allChangeList[i][j][7]                                                )
+                                   );
+            }
+
         }
         counter++;
-        allTargetChanges.push(targetModificationsJSON(modelname, counter, falloff, targetChanges));
+        allTargetChanges.push(targetModificationsJSON(counter, modelname, falloff, targetChanges));
 
         // This for loop prepares the index of the next item
         // Increments the index of the last abbrv
@@ -104,12 +120,29 @@ function finalModificationsJSON(){
 
 function prepareChanges() {
 
+    document.getElementById("abbrv").value,
+    document.getElementById("dual").value,
+    document.getElementById("dualabbrv").value,
+    document.getElementById("changenumber").value,
+    document.getElementById("startx").value,
+    document.getElementById("starty").value,
+    document.getElementById("startz").value,
+    document.getElementById("dx").value,
+    document.getElementById("dy").value,
+    document.getElementById("dz").value,
+    document.getElementById("influence").value,
+    //document.getElementById("modelname").value,
+    //document.getElementById("falloff").value,
+    document.getElementById("transformation").value
+    
     for (i = 0; i < inputs.length; i++) {
         // get inner array
         var vals = inputs[i];
-        var currentInfl = vals[6];
-        var iterationNo = parseInt(vals[7]); //changenumber
-        var currentAbbrv = vals[8];
+        var currentAbbrv = vals[0];
+        var currentDual = vals[1];
+        var currentDualAbbrv = vals[2];
+        var iterationNo = parseInt(vals[3]); //changenumber
+        var currentInfl = vals[10];
         var currentTranslation = vals[11];
         var startX = 0.0;
         var startY = 0.0;
@@ -120,10 +153,12 @@ function prepareChanges() {
         var changes = [];
         //dx, dy, dz, influence, changenumber, abbrv, modelname, falloff
         for (var j = 0; j < iterationNo; j++) {
-            changeDx = parseFloat(vals[0]) + (parseFloat(vals[3]) * j);
-            changeDy = parseFloat(vals[1]) + (parseFloat(vals[4]) * j);
-            changeDz = parseFloat(vals[2]) + (parseFloat(vals[5]) * j);
+            changeDx = parseFloat(vals[4]) + (parseFloat(vals[7]) * j);
+            changeDy = parseFloat(vals[5]) + (parseFloat(vals[8]) * j);
+            changeDz = parseFloat(vals[6]) + (parseFloat(vals[9]) * j);
             changes.push([currentAbbrv,
+                          currentDual,
+                          currentDualAbbrv,
                           changeDx,
                           changeDy,
                           changeDz,
@@ -141,20 +176,31 @@ function prepareJSON() {
         return thejson;
 }
 
+function createAddCell(row, cellValue, bold) {
+    var cell = document.createElement('td');
+    cell.textContent = cellValue;
+    cell.style.border = '1px solid black';
+    if (bold == 'Y') cell.style = 'font-weight:bold';
+    row.appendChild(cell);
+}
+
 function addModification() {
     //startx, starty, startz, dx, dy, dz, influence, changenumber, abbrv, modelname, falloff, translation
-    currentInput = [document.getElementById("startx").value,
-                    document.getElementById("starty").value,
-                    document.getElementById("startz").value,
-                    document.getElementById("dx").value,
-                    document.getElementById("dy").value,
-                    document.getElementById("dz").value,
-                    document.getElementById("influence").value,
-                    document.getElementById("changenumber").value,
-                    document.getElementById("abbrv").value,
-                    document.getElementById("modelname").value,
-                    document.getElementById("falloff").value,
-                    document.getElementById("transformation").value
+    currentInput = [
+        document.getElementById("abbrv").value,
+        document.getElementById("dual").value,
+        document.getElementById("dualabbrv").value,
+        document.getElementById("changenumber").value,
+        document.getElementById("startx").value,
+        document.getElementById("starty").value,
+        document.getElementById("startz").value,
+        document.getElementById("dx").value,
+        document.getElementById("dy").value,
+        document.getElementById("dz").value,
+        document.getElementById("influence").value,
+        //document.getElementById("modelname").value,
+        //document.getElementById("falloff").value,
+        document.getElementById("transformation").value
                     ];
     //console.log(thisInput);
     inputs.push(currentInput);
@@ -166,57 +212,22 @@ function addModification() {
     // create table element
     var table = document.createElement('table');
     var tbody = document.createElement('tbody');
-    // loop array
-
     var row = document.createElement('tr');
-    var cell = document.createElement('td');
-    cell.textContent = "Start X";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Start Y";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Start Z";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Magnitude X";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Magnitude Y";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Magnitude Z";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Influence";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Number of Iterations";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Abbrv";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Model Name";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Fall Off";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
-    var cell = document.createElement('td');
-    cell.textContent = "Transformation";
-    cell.style.border = '1px solid black';
-    row.appendChild(cell);
+
+    createAddCell(row, "Abbrv", 'Y');
+    createAddCell(row, "Dual", 'Y');
+    createAddCell(row, "Dual Abbrv", 'Y');
+    createAddCell(row, "Number of Iterations", 'Y');
+    createAddCell(row, "Start X", 'Y');
+    createAddCell(row, "Start Y", 'Y');
+    createAddCell(row, "Start Z", 'Y');
+    createAddCell(row, "Magnitude X", 'Y');
+    createAddCell(row, "Magnitude Y", 'Y');
+    createAddCell(row, "Magnitude Z", 'Y');
+    createAddCell(row, "Influence", 'Y');
+    //createAddCell(row, "Model Name", 'Y');
+    //createAddCell(row, "Fall Off", 'Y');
+    createAddCell(row, "Transformation", 'Y');
     tbody.appendChild(row);
     
     for (i = 0; i < inputs.length; i++) {
@@ -226,13 +237,7 @@ function addModification() {
         var row = document.createElement('tr');
         // loop inner array
         for (var j = 0; j < vals.length; j++) {
-            // create td element
-            var cell = document.createElement('td');
-            // set text
-            cell.textContent = vals[j];
-            cell.style.border = '1px solid black';
-            // append td to tr
-            row.appendChild(cell);
+            createAddCell(row, vals[j], 'N');
         }
         //append tr to tbody
         tbody.appendChild(row);
@@ -262,9 +267,9 @@ function downloadJSON(){
         // get inner array
         var vals = inputs[i];
         if (i>0)
-            inputAbbrvs = inputAbbrvs + "_" + vals[8];
+            inputAbbrvs = inputAbbrvs + "_" + vals[0];//adds abbrv names to the list
         else
-            inputAbbrvs = vals[8];
+            inputAbbrvs = vals[0];
     }
     var modelName = document.getElementById("modelname").value;
     var filename = modelName + "_" + inputAbbrvs + ".json";

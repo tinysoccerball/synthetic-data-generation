@@ -148,14 +148,14 @@ def newerJSON(): #create new JSON file data for output file model
         #create new json file with updated data
     print("Created new JSON file titled: " + target_file)
 
-def mtlPath(input):
-    MYFILE = input[:-3] + "mtl"
+def mtlPath(input): #This function ensures that the file path contained in the mtl file is a relative path
+    MYFILE = input[:-3] + "mtl" #we took input as the obj file so we are just changing the extention here
     print("MTL file to be adjusted: " + MYFILE)
     with open(MYFILE, "r", encoding="utf-8") as f:
         mtl = f.readlines()
         last_line = mtl[-1]
-    path = last_line.split()[-1]
-    filename = path.split("/")[-1]
+    path = last_line.split()[-1] #this just takes the last "word" of the line which should be the file path
+    filename = path.split("/")[-1] #extract the filename by splitting on / and taking the last element
     path = filename
     splitlines = last_line.split()
     while len(splitlines) > 2:

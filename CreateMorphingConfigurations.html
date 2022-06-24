@@ -15,12 +15,20 @@
       <option value="SMOOTH">Smooth (Recommended)</option>
       <option value="SPHERE">Sphere</option>
       <option value="INVERSE_SQUARE">Inverse Square</option>
-    </select><br>
+    </select><br><br>
     Transformation Type:<select name="transformation" id="transformation">
       <option value="Translation">Translation (Recommended)</option>
+      <option value="Scale">Scale</option>
     </select><br>
-    Landmark Abbreviation: <input type="text" id="abbrv" name="abbrv" placeholder = "abbreviation"><br>
     Influence Raidus: <input type="text" id="influence" name="influence" placeholder = "influence"><br>
+    Landmark Abbreviation: <input type="text" id="abbrv" name="abbrv" placeholder = "abbreviation">
+        Is dual landmark?<select name="dual" id="dual">
+          <option value="N">No</option>
+          <option value="Y">Yes</option>
+        </select><br>
+        If dual landmark, corresponding landmark's abbreviation:<input type="text" id="dualabbrv" name="dualabbrv" placeholder = "dual abbrv">
+        <br>
+    The number of iterations for the landmark: <input type="text" id="changenumber" name="changenumber" placeholder = "# of Changes"><br>
     Starting Point Adjustment (This value is added to the initial location of the landmark and can be a negative value):<br>
     <input type="text" id="startx" name="startx" placeholder = "Adjustment for X">
     <input type="text" id="starty" name="starty" placeholder = "Adjustment for Y">
@@ -29,7 +37,6 @@
     <input type="text" id="dx" name="dx" placeholder = "Magnitude of Change on X">
     <input type="text" id="dy" name="dy" placeholder = "Magnitude of Change on Y">
     <input type="text" id="dz" name="dz" placeholder = "Magnitude of Change on Y"><br>
-    Number of Iterations for the Landmark: <input type="text" id="changenumber" name="changenumber" placeholder = "# of Changes"><br>
     <button onclick="addModification()">Add modification</button>
     <br>
     <table id="container"></table>

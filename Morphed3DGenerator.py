@@ -1,3 +1,20 @@
+'''
+The purpose of this code is to be used to manipulate 3D models
+based on predetermined landmark locations.
+This is done using the Blender Desktop application.
+Once you run the code from the command line, you will be prompted to give the path
+to your instruction json file.
+This program will read the instructions from the instruction JSON file and perform the
+modifications specified.
+The instruction JSON file is used to load the 3D model.
+The model JSON file is used to get the coordinates of the landmarks.
+The python proogram then uses a KD tree to map the landmarks onto vertices 
+to allow them to be manipulated
+The model is manipulated based on the instructions and is exported
+along with an updated descripted json file to account for the new 
+positions of the landmarks after manipulation
+'''
+
 import bpy #gives us access to blender python
 import bmesh #gives us more tools to manipulate mesh
 import mathutils #gives us access to the kdtree

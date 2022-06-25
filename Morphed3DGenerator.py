@@ -181,10 +181,6 @@ def mtlPath(input): #This function ensures that the file path contained in the m
     splitlines.insert(1, ' ')
     attempt = [''.join(splitlines)]
     string = attempt[0]
-    #for line in mtl:
-    #    pass
-    #line = string
-    print(mtl)
     mtl[-1] = string
     # read the file into a list of lines
     with open(MYFILE, 'r') as f:

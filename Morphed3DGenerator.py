@@ -170,7 +170,7 @@ def mtlPath(input): #This function ensures that the file path contained in the m
     print("MTL file to be adjusted: " + MYFILE)
     with open(MYFILE, "r", encoding="utf-8") as f:
         mtl = f.readlines()
-        last_line = mtl[-1]
+        last_line = mtl[-1] #this stores the last line of the file in a variable
     path = last_line.split()[-1] #this just takes the last "word" of the line which should be the file path
     filename = path.split("/")[-1] #extract the filename by splitting on / and taking the last element
     path = filename

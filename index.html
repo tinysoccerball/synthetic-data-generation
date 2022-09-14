@@ -8,14 +8,29 @@
 </head>
 <body>
     <h1>Configuration File Creator for Morphing 3D Models</h1>
-    <p id="Specifications"><b>Please enter the values for each landmark and then click 'Add Modification' button. Once you are done with adding landmarks that you want to morph, click the 'Make and Download' button.</b></p>
+    <table>
+        <tr>
+            <td style="border: 1px solid black;padding: 10px;">
+                <p id="Specifications"><b>Please enter the values for each landmark and then click 'Add Modification' button. Once you are done with adding landmarks that you want to morph, click the 'Make and Download Configuration File' button.</b></p>
+        </td>
+        </tr>
+        
+    <tr>
+            <td style="border: 1px solid black;padding: 10px;">
+                <br>
     <script src="instructionCreation.js"></script>
     Model Name: <input type="text" id="modelname" name="modelname" placeholder = "Model Name"><br>
     Fall off Type:<select name="falloff" id="falloff">
       <option value="SMOOTH">Smooth (Recommended)</option>
       <option value="SPHERE">Sphere</option>
       <option value="INVERSE_SQUARE">Inverse Square</option>
-    </select><br><br>
+    </select><br>
+    <br>
+    </td>
+            </tr>
+        <tr>
+            <td style="border: 1px solid black;padding: 10px;">
+                <br>
     Transformation Type:<select name="transformation" id="transformation">
       <option value="Translation">Translation (Recommended)</option>
       <option value="Scale">Scale</option>
@@ -37,7 +52,12 @@
     <input type="text" id="dx" name="dx" placeholder = "Magnitude of Change on X">
     <input type="text" id="dy" name="dy" placeholder = "Magnitude of Change on Y">
     <input type="text" id="dz" name="dz" placeholder = "Magnitude of Change on Y"><br>
+        <br>
     <button onclick="addModification()">Add modification</button>
+    <br>
+    </td>
+            </tr>
+        </table>
     <br>
     <table id="container"></table>
     <p id="Output"></p>

@@ -19,9 +19,9 @@ function targetModificationsJSON(counter, modelName, falloff, modifications) {
     targetModifications = {
         "ThreeDModel": modelName,
         "OriginalOBJFile": modelName + ".obj",
-        "OriginalJSONFile": modelName + ".json",
+        "OriginalLandmarkFile": modelName + ".json",
         "TargetOBJFile": modelName + "-Target-" + counter + ".obj",
-        "TargetJSONFile": modelName + "-Target-" + counter +".json",
+        "TargetLandmarkFile": modelName + "-Target-" + counter +".json",
         "Folder": ".",
         "FallOffType": falloff,
         "Modifications": modifications

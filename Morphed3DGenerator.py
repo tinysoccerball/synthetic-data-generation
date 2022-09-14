@@ -8,10 +8,10 @@ This program will read the instructions from the instruction JSON file and perfo
 modifications specified.
 The instruction JSON file is used to load the 3D model.
 The model JSON file is used to get the coordinates of the landmarks.
-The python proogram then uses a KD tree to map the landmarks onto vertices 
+The python program then uses a KD tree to map the landmarks onto vertices 
 to allow them to be manipulated
 The model is manipulated based on the instructions and is exported
-along with an updated descripted json file to account for the new 
+along with an updated description json file to account for the new 
 positions of the landmarks after manipulation
 '''
 
@@ -170,7 +170,7 @@ def mtlPath(input): #This function ensures that the file path contained in the m
     print("MTL file to be adjusted: " + MYFILE)
     with open(MYFILE, "r", encoding="utf-8") as f:
         mtl = f.readlines()
-        last_line = mtl[-1] #this stores the last line of the file in a variable
+        last_line = mtl[-1]
     path = last_line.split()[-1] #this just takes the last "word" of the line which should be the file path
     filename = path.split("/")[-1] #extract the filename by splitting on / and taking the last element
     path = filename
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     #For every file specified in the ModificationFiles array, assign the variables to be the data specified in those files and run main again.
     for file in main_data["ModificationFiles"]:
         input_data = file
-        origJSON = input_data["OriginalJSONFile"]
+        origJSON = input_data["OriginalLandmarkFile"]
         origJSONpath = os.path.join(directory, origJSON)
         with open(origJSONpath, encoding = 'utf-8') as f: #open JSON file as an object
             face_data = json.load(f) #set variable to that object
@@ -239,6 +239,6 @@ if __name__ == "__main__":
         modelname = input_data["threeDModel"]
         targetOBJ = input_data["TargetOBJFile"]
         targetOBJpath = os.path.join(script_dir, targetOBJ)
-        targetJSON = input_data["TargetJSONFile"]
+        targetJSON = input_data["TargetLandmarkFile"]
         targetJSONpath = os.path.join(script_dir, targetJSON)
         main()

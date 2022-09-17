@@ -1,0 +1,155 @@
+{
+    "threeDModel": "GF-Normal",
+    "gender": "",
+    "age": "",
+    "features": [
+        {
+            "name": "Alar Base Junction/Alar Crease - left",
+            "abbrv": "ac_l",
+            "xVal": 14.74,
+            "yVal": 4.08,
+            "zVal": 85.2
+        },
+        {
+            "name": "Alar Base Junction/Alar Crease - right",
+            "abbrv": "ac_r",
+            "xVal": -13.3,
+            "yVal": 2.78,
+            "zVal": 86.58
+        },
+        {
+            "name": "Alare/Alar Flare - left",
+            "abbrv": "al_l",
+            "xVal": 14.79,
+            "yVal": 10.18,
+            "zVal": 84.8
+        },
+        {
+            "name": "Alare/Alar Flare - right",
+            "abbrv": "al_r",
+            "xVal": -13.42,
+            "yVal": 9.87,
+            "zVal": 86.67
+        },
+        {
+            "name": "Columellar Break Point",
+            "abbrv": "c",
+            "xVal": 0.49,
+            "yVal": 2.63,
+            "zVal": 101.14
+        },
+        {
+            "name": "Endocanthion/Medial Canthus - left",
+            "abbrv": "en_l",
+            "xVal": 20.64,
+            "yVal": 41.66,
+            "zVal": 70.08
+        },
+        {
+            "name": "Endocanthion/Medial Canthus - right",
+            "abbrv": "en_r",
+            "xVal": -20.06,
+            "yVal": 42.11,
+            "zVal": 70.76
+        },
+        {
+            "name": "Glabella",
+            "abbrv": "g",
+            "xVal": 1.37,
+            "yVal": 59.71,
+            "zVal": 86.38
+        },
+        {
+            "name": "Maxilloanteriorale - left",
+            "abbrv": "mf_l",
+            "xVal": 11.59,
+            "yVal": 33.84,
+            "zVal": 81.17
+        },
+        {
+            "name": "Maxilloanteriorale - right",
+            "abbrv": "mf_r",
+            "xVal": -10.59,
+            "yVal": 33.55,
+            "zVal": 82.76
+        },
+        {
+            "name": "Maxillofrontale - left",
+            "abbrv": "ma l",
+            "xVal": 10.04,
+            "yVal": 40.66,
+            "zVal": 81.03
+        },
+        {
+            "name": "Maxillofrontale - right",
+            "abbrv": "ma r",
+            "xVal": -9.19,
+            "yVal": 40.9,
+            "zVal": 82.03
+        },
+        {
+            "name": "Nasal Parenthesis - left",
+            "abbrv": "np_l",
+            "xVal": 13.51,
+            "yVal": 24.51,
+            "zVal": 83.33
+        },
+        {
+            "name": "Nasal Parenthesis - right",
+            "abbrv": "np_r",
+            "xVal": -12.07,
+            "yVal": 24.27,
+            "zVal": 85.08
+        },
+        {
+            "name": "Nasion/Radix",
+            "abbrv": "n",
+            "xVal": 0.96,
+            "yVal": 48.83,
+            "zVal": 85.97
+        },
+        {
+            "name": "Pronasale/Tip",
+            "abbrv": "prn",
+            "xVal": 0.6,
+            "yVal": 10.09,
+            "zVal": 106.56
+        },
+        {
+            "name": "Rhinion",
+            "abbrv": "r",
+            "xVal": 0.82,
+            "yVal": 34.99,
+            "zVal": 91.72
+        },
+        {
+            "name": "Subnasale",
+            "abbrv": "sn",
+            "xVal": 0.68,
+            "yVal": -0.57,
+            "zVal": 93.75
+        },
+        {
+            "name": "Supratip Break Point",
+            "abbrv": "s",
+            "xVal": 0.48,
+            "yVal": 20.48,
+            "zVal": 101.5
+        },
+        {
+            "name": "Tip Defining Point - left",
+            "abbrv": "td_l",
+            "xVal": 6.75,
+            "yVal": 14.11,
+            "zVal": 102.28
+        },
+        {
+            "name": "Tip Defining Point - right",
+            "abbrv": "td_r",
+            "xVal": -5.49,
+            "yVal": 14.03,
+            "zVal": 103.09
+        }
+    ],
+"measurements": []
+}

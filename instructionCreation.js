@@ -246,6 +246,18 @@ function addModification() {
     table.appendChild(tbody);
     // append table to container
     container.appendChild(table);
+    
+    var totalMorphedFiles = 1;
+    for (i = 0; i < inputs.length; i++) {
+        var vals = inputs[i];
+        var iterationNo = parseInt(vals[3]); //changenumber
+        totalMorphedFiles = totalMorphedFiles * iterationNo;
+    }
+    var numFiles = document.getElementById('NumberOfFiles');
+    numFiles.innerHTML = "";
+    const textNode = document.createTextNode('Number of morphed 3D models that will be created with these modifications: ' + totalMorphedFiles);
+    numFiles.appendChild(textNode);
+    
 }
 
 function download(filename, text) {

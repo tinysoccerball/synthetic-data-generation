@@ -53,13 +53,14 @@
     <input type="text" id="dy" name="dy" placeholder = "Magnitude of Change on Y">
     <input type="text" id="dz" name="dz" placeholder = "Magnitude of Change on Y"><br>
         <br>
-    <button onclick="addModification()">Add modification</button>
+    <button onclick="addModification()">Add Modifications for the Landmark</button>
     <br>
     </td>
             </tr>
         </table>
     <br>
-    <table id="container"></table>
+    <table style="border: 1px solid black;padding: 10px;" id="container"></table>
+    <b><p id="NumberOfFiles"></p></b>
     <p id="Output"></p>
     <button onclick="downloadJSON()">Make and Download Configuration JSON File</button>
 </body>

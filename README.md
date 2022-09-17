@@ -33,7 +33,7 @@ Due to the huge number of outputs and size of the individual outputs that would 
 The CreateMorphingConfigurations.html page is used to generate the instructions JSON file. The configuration JSON file is given to the Python script to generate modified 3D models. An example JSON file is provided with the name Facial-Deformities.json. Below is a screenshot of the CreateMorphingConfigurations.html page:
 
 ========
-![MicrosoftTeams-image](https://user-images.githubusercontent.com/91271377/189794313-dd0572c6-1c2e-4c68-b9fd-53d5e08dc5d7.png)
+![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/91271377/190245090-75241145-1a97-4ae1-a609-eb7168d77769.png)
 ========
 
 The user needs to enter the names of the model (.obj) file in the ‘Model Name’ textbox. The names of the model (.obj) file and the .json file that contains landmark locations should match and be in the same directory. For example, Sarah.obj and Sarah.json. In this case, you would input “Sarah” as the model name. 

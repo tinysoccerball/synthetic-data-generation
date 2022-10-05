@@ -20,6 +20,7 @@ import bmesh #gives us more tools to manipulate mesh
 import mathutils #gives us access to the kdtree
 import os # allows us to import and export files 
 import json #allows us to parse and create JSON files
+import shutil #used to copy files
 
 def bringOBJ():#import .obj file into scene
     file_loc = origOBJpath
@@ -187,10 +188,31 @@ def mtlPath(input): #This function ensures that the file path contained in the m
         lines = f.readlines()
     # now edit the last line of the list of lines
     lines[-1] = string
+    splitline = lines[-1].split(" ")
+    file = splitline[1]
+    important = file.split(".")
+    important[0] = targetOBJ[:-4]
+    newimportant = ['.'.join(important)]
+    newimportant
+    splitline[1] = newimportant
+    fullLine = splitline[0] + " " + splitline[1][0]
+    lines[-1] = fullLine
     # now write the modified list back out to the file0
     #open(MYFILE, 'w').writelines(lines)
     with open(MYFILE, 'w') as f:
         f.writelines(lines)
+
+def newJPG():
+    oldJPG = targetOBJ[:-3] + "jpg"
+    newJPG = origOBJ[:-3] + "jpg"
+    newJPGDir = os.path.join(directory, newJPG)
+    print(newJPGDir)
+    oldJPGDir = os.path.join(directory, oldJPG)
+    print(oldJPGDir)
+    print("copying " + oldJPG + " to " + newJPG)
+    #os.system('copy ' + oldJPGDir + ' ' + newJPGDir)
+    shutil.copyfile(oldJPGDir, newJPGDir)
+    print("Copied " + oldJPG + " to " + newJPG)
 
 def export():#export the transformed model as a .obj file
     bpy.ops.object.mode_set(mode = 'OBJECT') #mode to object
@@ -212,6 +234,7 @@ def main():
     cursorReturn()
     newerJSON()
     export()
+    newJPG()
     deleteOBJ()
     
 if __name__ == "__main__":

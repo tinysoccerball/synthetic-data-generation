@@ -230,7 +230,7 @@ if __name__ == "__main__":
     #For every file specified in the ModificationFiles array, assign the variables to be the data specified in those files and run main again.
     for file in main_data["ModificationFiles"]:
         input_data = file
-        origJSON = input_data["OriginalLandmarkFile"]
+        origJSON = input_data["OriginalJSONFile"]
         origJSONpath = os.path.join(directory, origJSON)
         with open(origJSONpath, encoding = 'utf-8') as f: #open JSON file as an object
             face_data = json.load(f) #set variable to that object
@@ -239,6 +239,6 @@ if __name__ == "__main__":
         modelname = input_data["threeDModel"]
         targetOBJ = input_data["TargetOBJFile"]
         targetOBJpath = os.path.join(script_dir, targetOBJ)
-        targetJSON = input_data["TargetLandmarkFile"]
+        targetJSON = input_data["TargetJSONFile"]
         targetJSONpath = os.path.join(script_dir, targetJSON)
         main()

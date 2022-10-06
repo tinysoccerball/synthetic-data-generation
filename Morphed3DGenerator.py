@@ -203,8 +203,8 @@ def mtlPath(input): #This function ensures that the file path contained in the m
         f.writelines(lines)
 
 def newJPG():
-    oldJPG = targetOBJ[:-3] + "jpg"
-    newJPG = origOBJ[:-3] + "jpg"
+    newJPG = targetOBJ[:-3] + "jpg"
+    oldJPG = origOBJ[:-3] + "jpg"
     newJPGDir = os.path.join(directory, newJPG)
     print(newJPGDir)
     oldJPGDir = os.path.join(directory, oldJPG)

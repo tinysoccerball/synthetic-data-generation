@@ -14,7 +14,7 @@ The model is manipulated based on the instructions and is exported
 along with an updated description json file to account for the new 
 positions of the landmarks after manipulation
 '''
-
+#Note: bpy, bmesh, and mathutils are all present in the blender python interpreter
 import bpy #gives us access to blender python
 import bmesh #gives us more tools to manipulate mesh
 import mathutils #gives us access to the kdtree
@@ -102,7 +102,8 @@ def scale(vgroup, dx, dy, dz, prop_size): #uses a multiplier that scales the dis
     bpy.ops.object.vertex_group_select()
     #this function performs a scale. It calculayted the distance of a point from the origin and applies a multiplier to that distance.
     #This can be restricted along certain axis or axes.
-    bpy.ops.transform.resize(value=(dx, dy, dz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=prop_size, use_proportional_connected=True, use_proportional_projected=False)
+    bpy.ops.transform.resize(value=(dx, dz, (dy)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(False, True, False), mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=prop_size, use_proportional_connected=True, use_proportional_projected=False)
+    #dy and dz have been swapped to comply with Blender orientation
     bpy.ops.object.vertex_group_deselect()
 
 def translate(vgroup, dx, dy, dz, prop_size): #moves the vertex in 3D space by adding values to its positional coordinates
@@ -113,7 +114,8 @@ def translate(vgroup, dx, dy, dz, prop_size): #moves the vertex in 3D space by a
     bpy.ops.object.vertex_group_set_active(group=vgroup) #set vertex group to active
     #bpy.ops.object.vertex_group_select() 
     #this function performs a translation on a point. The point is moved in 3D space based on adding the given delta values to its coordinates.
-    bpy.ops.transform.translate(value=(float(dx), float(dy), float(dz)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
+    bpy.ops.transform.translate(value=(float(dx), float(-dz), float(dy)), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=True, use_proportional_edit=True, proportional_edit_falloff=falloff, proportional_size=float(prop_size), use_proportional_connected=False, use_proportional_projected=False)
+    #dy and dz have been swapped to comply with Blender orientation
     bpy.ops.object.vertex_group_deselect()
 
 def transformMesh(): #reads transformation instructions from the JSON instruction file and manipulates the mesh
